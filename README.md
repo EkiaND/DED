@@ -79,7 +79,6 @@ DED/
 │   │-- pays.php                 # Gestion des entités pays
 │   │-- indicateur.php           # Gestion des indicateurs économiques
 │   │-- data.php                 # Requêtes complexes et analyses
-│   │-- bdd.php                  # Fonctions de connexion et requêtes avec SQLite
 │
 │-- views/
 │   │-- dashboard.php            # Vue principale du tableau de bord
