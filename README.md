@@ -62,7 +62,7 @@ Ce projet vise à concevoir un tableau de bord interactif dédié à l’analyse
    - Assurez-vous que le fichier `economie_mondiale.db` est présent dans le répertoire `sql/`.
    - Configurez les paramètres de connexion à la base de données dans `config.inc.php` pour utiliser SQLite.
 4. Démarrer XAMPP et placer le projet dans le répertoire `htdocs` de XAMPP.
-5. Accéder à l'application via `http://localhost/EcoDashboard`.
+5. Accéder à l'application via `http://localhost/DED`.
 
 > [!CAUTION]
 > Si vous ne respectez pas ces étapes, attendez-vous à ce que le projet ne fonctionne pas correctement.
