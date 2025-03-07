@@ -1,3 +1,5 @@
+<?php
+
 /**
  * Configuration de l'application (connexion à la base de données)
  *
@@ -23,8 +25,7 @@
  * Exceptions:
  * - PDOException: Capture les erreurs liées à la connexion à la base de données et affiche un message d'erreur.
  */
- 
-<?php
+
 // Configuration de l'application (connexion à la base de données)
 
 // Chemin vers la base de données SQLite
