@@ -1,1 +1,25 @@
 # Configuration du serveur
+# Ce fichier .htaccess est utilisé pour configurer certaines options du serveur web Apache.
+# Il permet de définir des règles de réécriture d'URL afin de rendre les URLs plus propres et plus conviviales.
+
+# Active le moteur de réécriture d'URL
+# La directive 'RewriteEngine On' active le module de réécriture d'URL d'Apache.
+# Cela permet d'utiliser les directives RewriteCond et RewriteRule pour modifier les URLs des requêtes entrantes.
+RewriteEngine On
+
+# Si la requête n'est pas un fichier existant
+# La directive 'RewriteCond %{REQUEST_FILENAME} !-f' vérifie si le fichier demandé n'existe pas.
+# Si le fichier existe, la règle de réécriture ne sera pas appliquée.
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Si la requête n'est pas un répertoire existant
+# La directive 'RewriteCond %{REQUEST_FILENAME} !-d' vérifie si le répertoire demandé n'existe pas.
+# Si le répertoire existe, la règle de réécriture ne sera pas appliquée.
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Réécrit toutes les autres requêtes vers index.php en ajoutant le paramètre 'url' avec la valeur de la requête initiale
+# La directive 'RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]' réécrit toutes les requêtes qui ne correspondent pas à un fichier ou un répertoire existant.
+# ^(.*)$ capture l'intégralité de l'URL demandée.
+# index.php?url=$1 redirige la requête vers index.php en ajoutant un paramètre 'url' contenant l'URL initiale.
+# [QSA,L] indique que les paramètres de requête existants doivent être conservés (QSA) et que c'est la dernière règle à appliquer (L).
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
