@@ -102,12 +102,12 @@ Le développement sera divisé en 5 phases principales:
 ## Structure finale du projet
 
 ```
-EcoDashboard/
+DED/
 │-- models/
 │   │-- pays.php                 # Gestion des entités pays
 │   │-- indicateur.php           # Gestion des indicateurs économiques
 │   │-- data.php                 # Requêtes complexes et analyses
-│   │-- bdd.php                  # Classe de connexion à la base de données
+│   │-- bdd.php                  # Fonctions de connexion et requêtes avec SQLite
 │
 │-- views/
 │   │-- dashboard.php            # Vue principale du tableau de bord
@@ -120,7 +120,6 @@ EcoDashboard/
 │
 │-- controllers/
 │   │-- indicateurs.php          # Contrôleur principal
-│   │-- api.php                  # Point d'entrée pour les requêtes AJAX
 │
 │-- public/
 │   │-- css/
@@ -130,23 +129,21 @@ EcoDashboard/
 │       │-- graphiques.js        # Fonctions de génération des graphiques
 │       │-- interactions.js      # Gestion des interactions utilisateur
 │   │-- images/                  # Ressources graphiques
-│   │-- lib/                     # Bibliothèques tierces
-│       │-- chart.js/            # Chart.js
 │
-│-- config.inc.php               # Configuration de l'application
+│-- config.inc.php               # Configuration de l'application (connexion à la base de données)
 │-- index.php                    # Point d'entrée de l'application
 │-- .htaccess                    # Configuration du serveur
 │-- sql/
 │   │-- economie_mondiale.db     # Base de données SQLite
-│   │-- schema.sql               # Schéma de la base de données
 │
 │-- docs/
 │   │-- rapport.pdf              # Rapport final du projet
-│   │-- modele_donnees.png       # Diagramme du modèle de données
-│
+│   │-- MCD.png                  # Diagramme du Modèle Conceptuel de Données
+│   │-- MLD.png                  # Diagramme du Modèle Logique de Données
+|
 │-- README.md                    # Documentation principale
-│-- DEV.md                       # Guide de développement (ce document)
-│-- LICENCE                      # Licence du projet
+│-- DEV.md                       # Guide de développement
+│-- LICENCE                      # Licence du projet    
 ```
 
 ## Calendrier de développement
