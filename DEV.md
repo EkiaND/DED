@@ -28,8 +28,8 @@ Le développement sera divisé en 5 phases principales:
   - [X] Identifier les tables et leurs relations
   - [X] Comprendre la nature des indicateurs disponibles
   - [X] Documenter le modèle de données dans un diagramme
-- [ ] **1.4.** Créer le fichier de configuration `config.inc.php` pour la connexion à la base de données
-- [ ] **1.5.** Configurer le `.htaccess` pour les règles de réécriture d'URL
+- [X] **1.4.** Créer le fichier de configuration `config.inc.php` pour la connexion à la base de données
+- [X] **1.5.** Configurer le `.htaccess` pour les règles de réécriture d'URL
 
 ### Phase 2: Backend (Jours 3-7)
 - [ ] **2.1.** Développer les modèles de base (`models/`)
