@@ -46,7 +46,6 @@
         default:
             include 'views/dashboard.php';
             break;
-        //test commit
     }
     ?>
 </body>
