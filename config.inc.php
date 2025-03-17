@@ -26,6 +26,9 @@
  * - PDOException: Capture les erreurs liées à la connexion à la base de données et affiche un message d'erreur.
  */
 
+
+ ################# ANCIENNE VERSION SQLITE #################
+ /*
 // Configuration de l'application (connexion à la base de données)
 
 // Chemin vers la base de données SQLite
@@ -40,5 +43,21 @@ try {
 } catch (PDOException $e) {
     // Gestion des erreurs de connexion
     die('Erreur de connexion à la base de données : ' . $e->getMessage());
+}
+*/
+
+function getBDD(){
+    $db_host = "localhost";
+    $db_name = "economie_mondiale"
+    $db_user = "root"
+    $db_pass = "";
+    $conn = mysqli_connect($db_host,$db_user,$db_pass,$db_name);
+
+    if mysqli_connect_error() {
+        echo mysqli_connect_error();
+        exit;
+    }
+
+    return $conn;
 }
 ?>
