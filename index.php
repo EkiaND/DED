@@ -36,7 +36,7 @@
     switch ($url) {
         case 'dashboard':
             include 'views/dashboard.php';
-            break;
+            break;  
         case 'infos_pays':
             include 'views/infos_pays.php';
             break;
