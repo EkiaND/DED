@@ -34,19 +34,36 @@ Le développement sera divisé en 5 phases principales:
 ### Phase 2: Backend (Jours 3-7)
 - [ ] **2.1.** Développer les modèles de base (`models/`)
   - [ ] **2.1.1.** Créer le modèle `pays.php` pour la gestion des pays
-    - [ ] Fonction pour récupérer la liste de tous les pays
-    - [ ] Fonction pour récupérer les détails d'un pays spécifique
-    - [ ] Fonction pour récupérer les pays par région
+    - [X] **`getPays()`** : Récupérer la liste de tous les pays (code et nom) pour alimenter les listes déroulantes ou afficher des informations générales.
+    - [X] **`getDetailsPays($codePays)`** : Récupérer les informations détaillées d'un pays spécifique (nom, région, groupe de revenu).
+    - [X] **`getPaysParRegion($idRegion)`** : Récupérer la liste des pays appartenant à une région spécifique.
+    - [ ] **`getPaysParGroupeRevenu($groupeRevenu)`** : Récupérer la liste des pays appartenant à un groupe de revenu spécifique (ex. "High income").
+    - [ ] **`getRegions()`** : Récupérer la liste des régions disponibles dans la base de données.
+    - [ ] **`getNombrePaysParRegion($idRegion)`** : Récupérer le nombre de pays dans une région spécifique.
+
   - [ ] **2.1.2.** Créer le modèle `indicateur.php` pour la gestion des indicateurs
-    - [ ] Fonction pour récupérer la liste des indicateurs disponibles
-    - [ ] Fonction pour récupérer les valeurs d'un indicateur pour un pays spécifique
-    - [ ] Fonction pour récupérer les moyennes d'un indicateur par région
-  - [ ] **2.1.3.** Créer le modèle `data.php` pour les requêtes complexes
-    - [ ] Fonction pour récupérer le top 10 des pays selon un indicateur
-    - [ ] Fonction pour analyser les corrélations entre indicateurs
-    - [ ] Fonction pour obtenir l'évolution d'un indicateur dans le temps par région
-- [ ] **2.2.** Créer le module de connexion à la base de données dans `config.inc.php` avec approche Singleton
-- [ ] **2.3.** Tester les requêtes SQL et optimiser les performances
+    - [ ] **`getIndicateurs()`** : Récupérer la liste des indicateurs disponibles (ex. taux de natalité, PIB, espérance de vie).
+    - [ ] **`getValeursIndicateur($idIndicateur, $codePays)`** : Récupérer les valeurs d'un indicateur pour un pays spécifique sur plusieurs années.
+    - [ ] **`getMoyenneIndicateurParRegion($idIndicateur, $idRegion)`** : Récupérer la moyenne d'un indicateur pour une région donnée.
+    - [ ] **`getIndicateursParAnnee($annee)`** : Récupérer les indicateurs disponibles pour une année spécifique.
+
+  - [ ] **2.1.3.** Créer le modèle `indices.php` pour la gestion des indices de développement
+    - [ ] **`getIndicesParPays($codePays)`** : Récupérer les indices de développement pour un pays donné.
+    - [ ] **`getIndiceGenreParPays($codePays, $annee)`** : Récupérer l'indice de développement par genre pour un pays et une année donnés.
+    - [ ] **`getEvolutionIndice($codePays, $indice)`** : Obtenir l'évolution d'un indice spécifique (ex. IDH) pour un pays donné.
+    - [ ] **`getComparaisonIndice($indice, $listePays)`** : Comparer un indice donné pour une liste de pays.
+    - [ ] **`getTopPaysParIndice($indice, $annee, $ordre = 'DESC')`** : Récupérer le classement des pays selon un indice donné pour une année spécifique.
+
+  - [ ] **2.1.4.** Créer le modèle `data.php` pour les requêtes complexes
+    - [ ] **`getTop10PaysParIndicateur($idIndicateur, $ordre = 'DESC')`** : Récupérer le top 10 des pays selon un indicateur (ordre croissant ou décroissant).
+    - [ ] **`getCorrelationEntreIndicateurs($idIndicateur1, $idIndicateur2)`** : Analyser les corrélations entre deux indicateurs.
+    - [ ] **`getEvolutionIndicateurParRegion($idIndicateur, $idRegion)`** : Obtenir l'évolution d'un indicateur dans le temps pour une région donnée.
+    - [ ] **`getDistributionIndicateurParRegion($idIndicateur, $annee)`** : Récupérer la distribution d'un indicateur par région pour une année donnée.
+
+- [ ] **2.2.** Tester les requêtes SQL et optimiser les performances
+  - [ ] Vérifier la validité des requêtes SQL pour chaque fonction des modèles.
+  - [ ] Utiliser des index sur les colonnes fréquemment utilisées dans les clauses `WHERE` et `JOIN`.
+  - [ ] Optimiser les requêtes complexes (ex. moyennes, corrélations) pour réduire le temps d'exécution.
 
 ### Phase 3: Frontend - Structure de base (Jours 8-12)
 - [ ] **3.1.** Développer la structure HTML de base
