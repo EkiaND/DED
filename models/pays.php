@@ -48,7 +48,7 @@ function getPaysParRegion($idRegion) {
         $conn = getBDD();
         $req = "SELECT nom_pays FROM pays AS p 
                 JOIN regions AS r ON r.id_region = p.id_region 
-                WHERE r.nom_region = ?;";
+                WHERE r.id_region = ?;";
         $stmt = mysqli_prepare($conn, $req);
 
         if ($stmt === false) {
@@ -156,4 +156,34 @@ function getPaysParGroupeRevenu($groupeRevenu) {
         return [];
     }
 }
+
+/**
+ * Récupérer le nombre de pays par région.
+*/
+
+function getNombrePaysParRegion($idRegion) {
+    try {
+        $conn = getBDD();
+        $req = "SELECT count(nom_pays) as "Nombre de pays" FROM pays AS p 
+                JOIN regions AS r ON r.id_region = p.id_region 
+                WHERE r.id_region = ?;";
+        $stmt = mysqli_prepare($conn, $req);
+
+        if ($stmt === false) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        mysqli_stmt_bind_param($stmt, "s", $idRegion);
+        if (!mysqli_stmt_execute($stmt)) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        $res = mysqli_stmt_get_result($stmt);
+        return mysqli_fetch_all($res, MYSQLI_ASSOC); // Récupère tous les résultats
+    } catch (Exception $e) {
+        logError($e->getMessage(), __FILE__, __LINE__);
+        return [];
+    }
+}
+
 ?>
