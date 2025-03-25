@@ -126,7 +126,7 @@ DED/
 ### Auteurs
 - **LESUEUR Romain**
 - **YON Anthony**
-- **X**
+- **DIOP Mandir**
 
 ### Répartition des tâches
 - **X** :
