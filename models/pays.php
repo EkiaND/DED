@@ -129,4 +129,31 @@ function getListePays() {
     }
 }
 
+/**
+ * Récupérer la liste des pays par groupe de revenu.
+*/
+
+function getPaysParGroupeRevenu($groupeRevenu) {
+    try {
+        $conn = getBDD();
+        $req = "SELECT nom_pays FROM pays 
+				WHERE groupe_revenu = ?;";
+        $stmt = mysqli_prepare($conn, $req);
+
+        if ($stmt === false) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        mysqli_stmt_bind_param($stmt, "s", $groupeRevenu);
+        if (!mysqli_stmt_execute($stmt)) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        $res = mysqli_stmt_get_result($stmt);
+        return mysqli_fetch_all($res, MYSQLI_ASSOC); // Récupère tous les résultats
+    } catch (Exception $e) {
+        logError($e->getMessage(), __FILE__, __LINE__);
+        return [];
+    }
+}
 ?>
