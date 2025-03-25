@@ -1,3 +1,5 @@
+<?php
+
 /**
  * Ce fichier est un script de test pour les fonctions définies dans le fichier pays.php.
  * Il inclut des tests pour les fonctions suivantes :
@@ -18,7 +20,7 @@
  * Note : Assurez-vous que le fichier pays.php est correctement inclus et que les fonctions
  * testées sont définies et fonctionnelles.
  */
-<?php
+
 // Inclure le fichier contenant les fonctions
 require_once '../models/pays.php';
 
