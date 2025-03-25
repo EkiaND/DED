@@ -102,4 +102,31 @@ function getDetailsPays($codePays) {
         return null;
     }
 }
+
+/**
+ * Récupérer la liste des régions.
+*/
+
+function getListePays() {
+	try{
+		$conn = getBDD();
+        $req = "SELECT nom_region FROM pays;";
+		$stmt = mysqli_prepare($conn,$req);
+
+		if ($stmt === false) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        if (!mysqli_stmt_execute($stmt)) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        $res = mysqli_stmt_get_result($stmt);
+        return mysqli_fetch_all($res, MYSQLI_ASSOC); // Récupère tous les résultats
+    } catch (Exception $e) {
+        logError($e->getMessage(), __FILE__, __LINE__);
+        return [];
+    }
+}
+
 ?>
