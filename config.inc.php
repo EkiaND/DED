@@ -7,7 +7,8 @@
  *
  * Connexion à la base de données:
  * - La fonction `getBDD` établit une connexion à la base de données MySQL en utilisant `mysqli`.
- * - En cas d'erreur, un message est affiché et l'exécution est arrêtée.
+ * - Active le mode d'exception pour `mysqli` afin de lever des exceptions en cas d'erreur SQL.
+ * - En cas d'erreur de connexion, un message est affiché et l'exécution est arrêtée.
  *
  * Variables:
  * - $db_host (string): Adresse du serveur de base de données.
@@ -19,14 +20,18 @@
  * - mysqli: Instance de connexion MySQLi.
  *
  * Exceptions:
+ * - Utilise `mysqli_sql_exception` pour signaler les erreurs SQL.
  * - Arrête l'exécution en cas d'erreur de connexion.
  */
 
-function getBDD() {
+ function getBDD() {
     $db_host = "localhost";
     $db_name = "economie_mondiale";
     $db_user = "root";
     $db_pass = "";
+
+    // Activer le mode d'exception pour mysqli
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
     // Établir la connexion à la base de données
     $conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
