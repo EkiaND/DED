@@ -1,2 +1,41 @@
 /* Styles principaux */
 
+
+nav {
+    font-family: 'Inter', sans-serif; /* Utilisation de la police Inter */
+    background-color: #007bff; 
+    height: 3cm;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+ul {
+    display: flex; 
+    justify-content: space-around; 
+    align-items: center;
+    gap: 20px; 
+    list-style: none; 
+    padding: 0;
+    background-color: #007bff; 
+}
+
+li {
+    background-color: #007bff;
+    padding: 15px 20px;
+    border-radius: 10px;
+    transition: 0.3s;
+    border: 2px solid white;
+}
+
+li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+li:hover {
+    background-color: #0056b3; 
+    transform: scale(1.1); 
+}
+
