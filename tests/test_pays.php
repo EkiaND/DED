@@ -5,17 +5,15 @@
  * Il inclut des tests pour les fonctions suivantes :
  * 
  * - getPays() : Récupère la liste de tous les pays.
- * - getPaysParRegion($region) : Récupère la liste des pays appartenant à une région spécifique.
- * - getDetailsPays($nomPays) : Récupère les détails d'un pays spécifique en fonction de son code.
+ * - getDetailsPays($codePays) : Récupère les détails d'un pays spécifique en fonction de son code.
+ * - getPaysParRegion($idRegion) : Récupère la liste des pays appartenant à une région spécifique.
+ * - getPaysParGroupeRevenu($groupeRevenu) : Récupère la liste des pays appartenant à un groupe de revenu spécifique.
+ * - getRegions() : Récupère la liste des régions disponibles.
+ * - getNombrePaysParRegion($idRegion) : Récupère le nombre de pays dans une région spécifique.
  * 
  * Fonctions utilitaires :
  * - afficherResultat($titre, $resultat, $limite = 5) : Affiche les résultats de manière lisible
  *   avec une limite optionnelle sur le nombre de résultats affichés.
- * 
- * Tests effectués :
- * - Test de la fonction getPays pour vérifier la récupération de tous les pays.
- * - Test de la fonction getPaysParRegion avec une région spécifique ("East Asia & Pacific").
- * - Test de la fonction getDetailsPays avec un code pays spécifique ("FRA").
  * 
  * Note : Assurez-vous que le fichier pays.php est correctement inclus et que les fonctions
  * testées sont définies et fonctionnelles.
@@ -24,7 +22,13 @@
 // Inclure le fichier contenant les fonctions
 require_once '../models/pays.php';
 
-// Fonction utilitaire pour afficher les résultats de manière lisible
+/**
+ * Fonction utilitaire pour afficher les résultats de manière lisible.
+ *
+ * @param string $titre Titre du test.
+ * @param array $resultat Résultat à afficher.
+ * @param int $limite Nombre maximum de résultats à afficher.
+ */
 function afficherResultat($titre, $resultat, $limite = 5) {
     echo "<h2>$titre</h2>";
     if (empty($resultat)) {
@@ -42,13 +46,26 @@ function afficherResultat($titre, $resultat, $limite = 5) {
 }
 
 // Tester la fonction getPays
+echo "<h1>Tests pour le modèle pays.php</h1>";
 afficherResultat("Test de la fonction getPays", getPays());
 
-// Tester la fonction getPaysParRegion
-$region = "East Asia & Pacific";
-afficherResultat("Test de la fonction getPaysParRegion (Région : $region)", getPaysParRegion($region));
-
 // Tester la fonction getDetailsPays
-$nomPays = "FRA";
-afficherResultat("Test de la fonction getDetailsPays (Pays : $nomPays)", getDetailsPays($nomPays));
+$codePays = "FRA"; // Exemple de code pays
+afficherResultat("Test de la fonction getDetailsPays (Pays : $codePays)", getDetailsPays($codePays));
+
+// Tester la fonction getPaysParRegion
+$idRegion = "Europe & Central Asia"; // Exemple de région
+afficherResultat("Test de la fonction getPaysParRegion (Région : $idRegion)", getPaysParRegion($idRegion));
+
+// Tester la fonction getPaysParGroupeRevenu
+$groupeRevenu = "High income: nonOECD"; // Exemple de groupe de revenu
+afficherResultat("Test de la fonction getPaysParGroupeRevenu (Groupe de revenu : $groupeRevenu)", getPaysParGroupeRevenu($groupeRevenu));
+
+// Tester la fonction getRegions
+afficherResultat("Test de la fonction getRegions", getRegions());
+
+// Tester la fonction getNombrePaysParRegion
+$idRegion = "1"; // Exemple d'ID de région
+afficherResultat("Test de la fonction getNombrePaysParRegion (Région : $idRegion)", [getNombrePaysParRegion($idRegion)]);
+
 ?>

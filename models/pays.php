@@ -33,38 +33,6 @@ function getPays() {
 }
 
 /**
- * Récupérer les pays par région.
- *
- * @param string $idRegion Nom de la région.
- * @return array Liste des pays sous forme de tableaux associatifs (nom_pays).
- *               Retourne un tableau vide en cas d'erreur.
- */
-function getPaysParRegion($idRegion) {
-    try {
-        $conn = getBDD();
-        $req = "SELECT nom_pays FROM pays AS p 
-                JOIN regions AS r ON r.id_region = p.id_region 
-                WHERE r.nom_region = ?;";
-        $stmt = mysqli_prepare($conn, $req);
-
-        if ($stmt === false) {
-            throw new Exception(mysqli_error($conn));
-        }
-
-        mysqli_stmt_bind_param($stmt, "s", $idRegion);
-        if (!mysqli_stmt_execute($stmt)) {
-            throw new Exception(mysqli_error($conn));
-        }
-
-        $res = mysqli_stmt_get_result($stmt);
-        return mysqli_fetch_all($res, MYSQLI_ASSOC) ?: [];
-    } catch (Exception $e) {
-        logError($e->getMessage(), __FILE__, __LINE__);
-        return [];
-    }
-}
-
-/**
  * Récupérer les détails d'un pays.
  *
  * @param string $codePays Code du pays.
@@ -97,21 +65,25 @@ function getDetailsPays($codePays) {
 }
 
 /**
- * Récupérer la liste des régions disponibles.
+ * Récupérer les pays par région.
  *
- * @return array Liste des régions sous forme de tableaux associatifs (id_region, nom_region).
+ * @param string $idRegion Nom de la région.
+ * @return array Liste des pays sous forme de tableaux associatifs (nom_pays).
  *               Retourne un tableau vide en cas d'erreur.
  */
-function getRegions() {
+function getPaysParRegion($idRegion) {
     try {
         $conn = getBDD();
-        $req = "SELECT id_region, nom_region FROM regions;";
+        $req = "SELECT nom_pays FROM pays AS p 
+                JOIN regions AS r ON r.id_region = p.id_region 
+                WHERE r.nom_region = ?;";
         $stmt = mysqli_prepare($conn, $req);
 
         if ($stmt === false) {
             throw new Exception(mysqli_error($conn));
         }
 
+        mysqli_stmt_bind_param($stmt, "s", $idRegion);
         if (!mysqli_stmt_execute($stmt)) {
             throw new Exception(mysqli_error($conn));
         }
@@ -153,6 +125,35 @@ function getPaysParGroupeRevenu($groupeRevenu) {
         return [];
     }
 }
+
+/**
+ * Récupérer la liste des régions disponibles.
+ *
+ * @return array Liste des régions sous forme de tableaux associatifs (id_region, nom_region).
+ *               Retourne un tableau vide en cas d'erreur.
+ */
+function getRegions() {
+    try {
+        $conn = getBDD();
+        $req = "SELECT id_region, nom_region FROM regions;";
+        $stmt = mysqli_prepare($conn, $req);
+
+        if ($stmt === false) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        if (!mysqli_stmt_execute($stmt)) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        $res = mysqli_stmt_get_result($stmt);
+        return mysqli_fetch_all($res, MYSQLI_ASSOC) ?: [];
+    } catch (Exception $e) {
+        logError($e->getMessage(), __FILE__, __LINE__);
+        return [];
+    }
+}
+
 
 /**
  * Récupérer le nombre de pays par région.
