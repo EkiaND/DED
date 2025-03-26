@@ -33,13 +33,13 @@ Le développement sera divisé en 5 phases principales:
 
 ### Phase 2: Backend (Jours 3-7)
 - [ ] **2.1.** Développer les modèles de base (`models/`)
-  - [ ] **2.1.1.** Créer le modèle `pays.php` pour la gestion des pays
+  - [X] **2.1.1.** Créer le modèle `pays.php` pour la gestion des pays
     - [X] **`getPays()`** : Récupérer la liste de tous les pays (code et nom) pour alimenter les listes déroulantes ou afficher des informations générales.
     - [X] **`getDetailsPays($codePays)`** : Récupérer les informations détaillées d'un pays spécifique (nom, région, groupe de revenu).
     - [X] **`getPaysParRegion($idRegion)`** : Récupérer la liste des pays appartenant à une région spécifique.
-    - [ ] **`getPaysParGroupeRevenu($groupeRevenu)`** : Récupérer la liste des pays appartenant à un groupe de revenu spécifique (ex. "High income").
-    - [ ] **`getRegions()`** : Récupérer la liste des régions disponibles dans la base de données.
-    - [ ] **`getNombrePaysParRegion($idRegion)`** : Récupérer le nombre de pays dans une région spécifique.
+    - [X] **`getPaysParGroupeRevenu($groupeRevenu)`** : Récupérer la liste des pays appartenant à un groupe de revenu spécifique (ex. "High income").
+    - [X] **`getRegions()`** : Récupérer la liste des régions disponibles dans la base de données.
+    - [X] **`getNombrePaysParRegion($idRegion)`** : Récupérer le nombre de pays dans une région spécifique.
 
   - [ ] **2.1.2.** Créer le modèle `indicateur.php` pour la gestion des indicateurs
     - [ ] **`getIndicateurs()`** : Récupérer la liste des indicateurs disponibles (ex. taux de natalité, PIB, espérance de vie).
