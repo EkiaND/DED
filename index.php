@@ -16,6 +16,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Application DED</title>
+    <link rel="stylesheet" href="public/css/style.css">
 </head>
 <body>
     <nav>
