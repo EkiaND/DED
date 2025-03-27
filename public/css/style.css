@@ -16,16 +16,21 @@ ul {
     align-items: center;
     gap: 20px; 
     list-style: none; 
-    padding: 0;
+    padding: 0 20px;
     background-color: #007bff; 
+    width: 100%;
 }
 
 li {
+    flex-grow: 1;
+    text-align: center;
     background-color: #007bff;
     padding: 15px 20px;
     border-radius: 10px;
     transition: 0.3s;
     border: 2px solid white;
+    margin: 5px;
+    font-size: 1.5rem;
 }
 
 li a {
