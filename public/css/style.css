@@ -1,6 +1,36 @@
 /* Styles principaux */
 
 
+/* Style pour le header */
+#main-header {
+    display: flex;
+    justify-content: flex-start; /* Positionner l'image à gauche */
+    align-items: center; /* Centrer verticalement les éléments */
+    background-color: #007bff;
+    padding: 20px;
+    width: 100%; /* Assurer que le header occupe toute la largeur de l'écran */
+    box-sizing: border-box; /* Assurer que le padding n'affecte pas la largeur totale */
+    position: relative; /* Permet de centrer l'élément h1 */
+}
+#main-header img {
+    width: 150px; /* Ajuste la taille de l'image */
+    margin-right: 20px; /* Ajoute un peu d'espace entre l'image et le texte */
+}
+
+/* Style pour le h1 */
+#main-header h1 {
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 2.5rem;
+    margin-top: 20px;
+    text-align: center;
+    flex-grow: 0.85;
+}
+
+body {
+    background-color: #255;
+}
+
 nav {
     font-family: 'Inter', sans-serif; /* Utilisation de la police Inter */
     background-color: #007bff; 
@@ -43,4 +73,3 @@ li:hover {
     background-color: #0056b3; 
     transform: scale(1.1); 
 }
-
