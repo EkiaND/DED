@@ -1,7 +1,7 @@
 <?php
 // Fichier pour gérer les entités indicateurs
 
-require_once __DIR__ . '/../logger/logger.php'; // Inclure le logger
+//require_once __DIR__ . '/../logger/logger.php'; // Inclure le logger
 require_once __DIR__ . '/../config.inc.php'; // Inclure le fichier de configuration
 
 /**
@@ -71,7 +71,28 @@ function getIndicateurs() {
  *               Retourne un tableau vide en cas d'erreur.
  */
 function getValeursIndicateur($idIndicateur, $codePays) {
-    
+    try {
+        $conn = getBDD();
+        $query = "SELECT annee, $idIndicateur AS valeur 
+                  FROM indicateurs 
+                  WHERE code_pays = ? AND $idIndicateur IS NOT NULL";
+
+        $stmt = mysqli_prepare($conn, $query);
+        if ($stmt === false) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        mysqli_stmt_bind_param($stmt, "s", $codePays);
+        if (!mysqli_stmt_execute($stmt)) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        $res = mysqli_stmt_get_result($stmt);
+        return mysqli_fetch_all($res, MYSQLI_ASSOC) ?: [];
+    } catch (Exception $e) {
+        logError($e->getMessage(), __FILE__, __LINE__);
+        return [];
+    }
 }
 
 /**

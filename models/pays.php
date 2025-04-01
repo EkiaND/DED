@@ -1,7 +1,7 @@
 <?php
 // Fichier pour gérer les entités pays
 
-require_once __DIR__ . '/../logger/logger.php'; // Inclure le logger
+//require_once __DIR__ . '/../logger/logger.php'; // Inclure le logger
 require_once __DIR__ . '/../config.inc.php'; // Inclure le fichier de configuration
 
 /**
