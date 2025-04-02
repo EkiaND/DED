@@ -128,13 +128,51 @@ DED/
 - **YON Anthony**
 - **DIOP Mandir**
 
-### Répartition des tâches
-- **X** :
-  - Développement des fonctionnalités de sélection et vue d’ensemble des indicateurs.
-- **X** :
-  - Analyse de l’évolution des indicateurs et comparaison des pays.
-- **X** :
-  - Analyse des indicateurs par région et visualisations interactives.
+Voici une version corrigée et clarifiée de la répartition des tâches pour votre projet :
+
+### Répartition des Tâches
+
+- **Anthony YON :**
+  - **Responsabilités :**
+    - Création et maintien du code dans `/models/pays.php`.
+    - Création et maintien du code dans `/views/dashboard.php`.
+    - Product Owner de la partie `/controllers/indicateurs.php` concernant le dashboard principal.
+    - Création et maintien du code concernant les headers/footers.
+    - Création d'au moins un graphique sur le dashboard principal.
+
+- **Mandir DIOP :**
+  - **Responsabilités :**
+    - Création et maintien du code dans `config.inc.php`. 
+    - Création et maintien du code dans `/models/indicateur.php`.
+    - Création du MLD (Modèle Logique de Données).
+    - Création et maintien du code dans `/views/infos_pays.php`.
+    - Création et maintien du code dans `/controllers/indicateur.php` concernant `/views/infos_pays.php`.
+    - Création d'au moins un graphique sur le dashboard principal.
+
+- **Romain LESUEUR :**
+  - **Responsabilités :**
+    - Création et maintien du code dans `/models/data.php`.
+    - Création et maintien du dossier `/tests/`.
+    - Création et maintien du logger.
+    - Assistance sur le développement des parties `/views/` et `/controllers/`.
+    - Création et maintien du code dans `/controllers/indicateurs.php` concernant le dashboard principal.
+    - Création et maintien des fichiers suivants : `DEV.md`, `README.md`, `.htaccess`, `/docs/howtogit.md`.
+    - Création d'au moins un graphique sur le dashboard principal.
+    - Supervision de tout le projet.
+
+- **Courteney SAINT-HUBERT :**
+  - **Responsabilités :**
+    - Création et maintien du code dans `/models/indices.php`.
+    - Création du MCD (Modèle Conceptuel de Données).
+    - Création et maintien du code dans `/views/comparaison_pays.php`.
+    - Création et maintien du code dans `/controllers/indicateurs.php` concernant `/views/comparaison_pays.php`.
+    - Création d'au moins un graphique sur le dashboard principal.
+
+### Clarifications
+
+- **Product Owner :** Responsable de la vision globale et des priorités pour la partie spécifique du projet.
+- **Supervision :** Assurer la cohérence et la qualité globale du projet, coordonner les efforts de l'équipe, sans être responsable de la volonté de travail de chacun.
+- **Graphiques :** Chaque membre est responsable de la création d'au moins un graphique pour le dashboard principal, ce qui permet de diversifier les visualisations et d'enrichir l'interface utilisateur.
 
 <div align="center">
 
