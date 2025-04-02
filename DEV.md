@@ -54,11 +54,11 @@ Le développement sera divisé en 5 phases principales:
     - [ ] **`getComparaisonIndice($indice, $listePays)`** : Comparer un indice donné pour une liste de pays.
     - [ ] **`getTopPaysParIndice($indice, $annee, $ordre = 'DESC')`** : Récupérer le classement des pays selon un indice donné pour une année spécifique.
 
-  - [ ] **2.1.4.** Créer le modèle `data.php` pour les requêtes complexes
-    - [ ] **`getTop10PaysParIndicateur($idIndicateur, $ordre = 'DESC')`** : Récupérer le top 10 des pays selon un indicateur (ordre croissant ou décroissant).
-    - [ ] **`getCorrelationEntreIndicateurs($idIndicateur1, $idIndicateur2)`** : Analyser les corrélations entre deux indicateurs.
-    - [ ] **`getEvolutionIndicateurParRegion($idIndicateur, $idRegion)`** : Obtenir l'évolution d'un indicateur dans le temps pour une région donnée.
-    - [ ] **`getDistributionIndicateurParRegion($idIndicateur, $annee)`** : Récupérer la distribution d'un indicateur par région pour une année donnée.
+  - [X] **2.1.4.** Créer le modèle `data.php` pour les requêtes complexes
+    - [X] **`getTop10PaysParIndicateur($idIndicateur, $ordre = 'DESC', $annee = null)`** : Récupérer le top 10 des pays selon un indicateur (ordre croissant ou décroissant), avec la possibilité de filtrer par année. La sortie inclut les pays, leurs valeurs maximales pour l'indicateur et les années correspondantes.
+    - [X] **`getCorrelationEntreIndicateurs($idIndicateur1, $idIndicateur2, $filtre = null, $typeFiltre = 'pays')`** : Analyser les corrélations entre deux indicateurs, avec la possibilité de filtrer par un pays ou une région. La sortie inclut le coefficient de corrélation, le filtre appliqué et le type de filtre.
+    - [X] **`getEvolutionIndicateurParRegion($idIndicateur, $idRegion)`** : Obtenir l'évolution d'un indicateur dans le temps pour une région donnée. La sortie inclut les années et les statistiques suivantes : moyenne, médiane, écart-type, premier quartile (Q1) et troisième quartile (Q3).
+    - [X] **`getDistributionIndicateurParRegion($idIndicateur, $annee)`** : Récupérer la distribution d'un indicateur par région pour une année donnée.
 
 - [ ] **2.2.** Tester les requêtes SQL et optimiser les performances
   - [ ] Vérifier la validité des requêtes SQL pour chaque fonction des modèles.
