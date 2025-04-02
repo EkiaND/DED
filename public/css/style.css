@@ -1,7 +1,10 @@
 /* Styles principaux */
 
-#pibChart{
-    background-color: white;
+body {
+    background-color: #255;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
 }
 
 /* Style pour le header */
@@ -15,6 +18,7 @@
     box-sizing: border-box; /* Assurer que le padding n'affecte pas la largeur totale */
     position: relative; /* Permet de centrer l'élément h1 */
 }
+
 #main-header img {
     width: 150px; /* Ajuste la taille de l'image */
     margin-right: 20px; /* Ajoute un peu d'espace entre l'image et le texte */
@@ -23,56 +27,96 @@
 /* Style pour le h1 */
 #main-header h1 {
     color: white;
-    font-family: 'Inter', sans-serif;
     font-size: 2.5rem;
-    margin-top: 20px;
+    margin: 0;
     text-align: center;
-    flex-grow: 0.85;
+    flex-grow: 1;
 }
 
-body {
-    background-color: #255;
-}
-
+/* Style pour la navigation */
 nav {
-    font-family: 'Inter', sans-serif; /* Utilisation de la police Inter */
-    background-color: #007bff; 
+    background-color: #007bff;
     height: 3cm;
+    display: flex;
     justify-content: center;
     align-items: center;
-    display: flex;
 }
 
 ul {
-    display: flex; 
-    justify-content: space-around; 
+    display: flex;
+    justify-content: space-around;
     align-items: center;
-    gap: 20px; 
-    list-style: none; 
-    padding: 0 20px;
-    background-color: #007bff; 
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
     width: 100%;
 }
 
 li {
-    flex-grow: 1;
+    flex-grow: 1; /* Les boutons prennent une largeur égale */
     text-align: center;
-    background-color: #007bff;
-    padding: 15px 20px;
-    border-radius: 10px;
-    transition: 0.3s;
-    border: 2px solid white;
-    margin: 5px;
-    font-size: 1.5rem;
+    margin: 5px; /* Espacement entre les boutons */
 }
 
 li a {
     text-decoration: none;
     color: white;
     font-weight: bold;
+    display: block; /* Étend le lien à toute la taille du bouton */
+    background-color: #007bff;
+    padding: 15px 20px;
+    border-radius: 10px;
+    border: 2px solid white;
+    font-size: 1.5rem;
+    text-align: center;
+    transition: 0.3s;
+    box-sizing: border-box; /* Inclure le padding dans les dimensions */
+    transform-origin: center; /* Point d'origine pour l'agrandissement */
 }
 
-li:hover {
-    background-color: #0056b3; 
-    transform: scale(1.1); 
+li a:hover {
+    background-color: #0056b3;
+    transform: scale(1.1); /* Agrandit légèrement le bouton au survol */
+}
+
+/* Styles pour le tableau des graphiques */
+#graphTable {
+    width: 100%; /* Le tableau occupe toute la largeur de la page */
+    border-collapse: separate; /* Séparer les cellules pour les bordures arrondies */
+    border-spacing: 20px; /* Espacement entre les cellules */
+    margin: 20px 0; /* Espacement au-dessus et en dessous du tableau */
+    table-layout: fixed; /* Fixer la largeur des colonnes */
+}
+
+/* Styles pour chaque cellule du tableau */
+.graph-cell {
+    background-color: white; /* Fond blanc pour chaque cellule */
+    border-radius: 10px; /* Bordures arrondies */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
+    padding: 10px; /* Espacement interne */
+    vertical-align: middle; /* Centrer le contenu verticalement */
+    text-align: center; /* Centrer le contenu horizontalement */
+    height: 400px; /* Hauteur fixe pour chaque ligne */
+    width: 45%; /* Largeur fixe pour chaque colonne */
+    box-sizing: border-box; /* Inclure le padding dans les dimensions */
+}
+
+/* Styles pour le conteneur de chaque graphique */
+.graph-container {
+    width: 100%; /* Le conteneur occupe toute la largeur de la cellule */
+    height: 100%; /* Le conteneur occupe toute la hauteur de la cellule */
+    display: flex;
+    justify-content: center; /* Centrer le contenu horizontalement */
+    align-items: center; /* Centrer le contenu verticalement */
+    flex-direction: column; /* Permet d'empiler le titre et le graphique */
+}
+
+/* Ajuster la taille des graphiques */
+.graph-container canvas {
+    display: block; /* Supprime les marges automatiques */
+    margin: 0 auto; /* Centre le canvas dans son conteneur */
+    width: 100%; /* Le graphique occupe toute la largeur de son conteneur */
+    height: 90%; /* Le graphique occupe 90% de la hauteur de son conteneur */
+    box-sizing: border-box; /* Inclure le padding dans les dimensions */
 }

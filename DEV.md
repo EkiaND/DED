@@ -67,14 +67,14 @@ Le développement sera divisé en 5 phases principales:
 
 ### Phase 3: Frontend - Structure de base (Jours 8-12)
 - [ ] **3.1.** Développer la structure HTML de base
-  - [ ] Créer le template principal dans `index.php`
-  - [ ] Organiser le tableau de bord en 4 sections selon le cahier des charges
+  - [X] Créer le template principal dans `index.php`
+  - [X] Organiser le tableau de bord en 4 sections selon le cahier des charges
 - [ ] **3.2.** Développer les vues (`views/`)
-  - [ ] **3.2.1.** Créer `dashboard.php` pour l'interface générale
+  - [X] **3.2.1.** Créer `dashboard.php` pour l'interface générale
   - [ ] **3.2.2.** Créer `infos_pays.php` pour les parties A et B
   - [ ] **3.2.3.** Créer `comparaison_pays.php` pour les parties C et D
 - [ ] **3.3.** Développer les styles CSS (`public/style.css`)
-  - [ ] Définir une palette de couleurs cohérente
+  - [x] Définir une palette de couleurs cohérente
   - [ ] Créer des classes pour les éléments de l'interface
   - [ ] Implémenter un design responsive
 
@@ -96,12 +96,11 @@ Le développement sera divisé en 5 phases principales:
     - [ ] Graphique linéaire pour le taux de chômage par région
 - [ ] **4.3.** Ajouter l'interactivité aux visualisations
   - [ ] Implémentation des filtres et sélections
-  - [ ] Ajout d'info-bulles au survol
+  - [x] Ajout d'info-bulles au survol
   - [ ] Gestion des animations de transition
 
 ### Phase 5: Finalisation (Jours 21-25)
 - [ ] **5.1.** Effectuer des tests complets de l'application
-  - [ ] Tester avec différents jeux de données
   - [ ] Vérifier l'exactitude des calculs et des visualisations
 - [ ] **5.2.** Optimiser les performances
   - [ ] Optimiser les requêtes SQL

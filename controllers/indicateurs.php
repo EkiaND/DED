@@ -1,70 +1,140 @@
 <?php
-// Fichier pour le contrôleur principal des indicateurs
+// Activer l'affichage des erreurs pour le débogage
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Inclure les modèles nécessaires
 require_once __DIR__ . '/../models/indicateur.php';
 require_once __DIR__ . '/../models/pays.php';
 
-// Récupérer le PIB Mondial par année
-function getMoyennePIBMondial() {
-    $pays = getPays();  
-    $pibParAnnee = [];  
+// Définir le type de contenu comme JSON
+header('Content-Type: application/json');
 
-    
+// Vérifier l'action demandée
+if (isset($_GET['action'])) {
+    $action = $_GET['action'];
+
+    switch ($action) {
+        case 'getMoyennePIBMondial':
+            echo json_encode(getMoyennePIBMondial());
+            break;
+
+        case 'getEsperanceVieMondiale':
+            echo json_encode(getEsperanceVieMondiale());
+            break;
+
+        default:
+            echo json_encode(['error' => 'Action non reconnue']);
+            break;
+    }
+    exit;
+}
+
+// Si aucune action n'est spécifiée, retourner une erreur
+echo json_encode(['error' => 'Aucune action spécifiée']);
+exit;
+
+// Fonction pour récupérer la moyenne du PIB mondial par année
+function getMoyennePIBMondial() {
+    $pays = getPays();
+    $pibParAnnee = [];
+
+    // Vérifier si les pays ont été récupérés correctement
     if ($pays === null || !is_array($pays)) {
-        echo "Aucun pays trouvé ou erreur de récupération des pays.";
-        return []; 
+        return ['error' => 'Aucun pays trouvé ou erreur de récupération des pays.'];
     }
 
-   
+    // Parcourir chaque pays pour récupérer les valeurs du PIB
     foreach ($pays as $paysInfo) {
-        $codePays = $paysInfo['code_pays'];  
-
-        
+        $codePays = $paysInfo['code_pays'];
         $valeurs = getValeursIndicateur('pib', $codePays);
 
-
-        
+        // Ignorer les pays sans données valides
         if ($valeurs === null || empty($valeurs)) {
-            continue;  
+            continue;
         }
 
-     
+        // Regrouper les données par année
         foreach ($valeurs as $data) {
-            $annee = $data['annee'];  
-            $pib = $data['valeur'];  
+            $annee = $data['annee'];
+            $pib = $data['valeur'];
 
-            
+            // Ignorer les valeurs invalides
             if (is_null($pib) || $pib <= 0) {
-                continue; 
+                continue;
             }
 
-           
+            // Initialiser l'année si elle n'existe pas encore
             if (!isset($pibParAnnee[$annee])) {
                 $pibParAnnee[$annee] = ['total' => 0, 'nb_pays' => 0];
             }
 
-            
+            // Ajouter les données pour l'année
             $pibParAnnee[$annee]['total'] += $pib;
             $pibParAnnee[$annee]['nb_pays']++;
         }
     }
 
-    
-    if (empty($pibParAnnee)) {
-        echo "Aucune donnée PIB valide trouvée.";
-        return [];
-    }
-
-   
+    // Calculer la moyenne du PIB par année
     $moyennePIB = [];
     foreach ($pibParAnnee as $annee => $data) {
-        
         if ($data['nb_pays'] > 0) {
             $moyennePIB[$annee] = $data['total'] / $data['nb_pays'];
         }
     }
 
-    
-    return $moyennePIB; 
+    return $moyennePIB;
 }
 
-echo json_encode(getMoyennePIBMondial());
+// Fonction pour récupérer l'espérance de vie mondiale par année
+function getEsperanceVieMondiale() {
+    $pays = getPays();
+    $esperanceParAnnee = [];
+
+    // Vérifier si les pays ont été récupérés correctement
+    if ($pays === null || !is_array($pays)) {
+        return ['error' => 'Aucun pays trouvé ou erreur de récupération des pays.'];
+    }
+
+    // Parcourir chaque pays pour récupérer les valeurs de l'espérance de vie
+    foreach ($pays as $paysInfo) {
+        $codePays = $paysInfo['code_pays'];
+        $valeurs = getValeursIndicateur('esperance_vie', $codePays);
+
+        // Ignorer les pays sans données valides
+        if ($valeurs === null || empty($valeurs)) {
+            continue;
+        }
+
+        // Regrouper les données par année
+        foreach ($valeurs as $data) {
+            $annee = $data['annee'];
+            $esperance = $data['valeur'];
+
+            // Ignorer les valeurs invalides
+            if (is_null($esperance) || $esperance <= 0) {
+                continue;
+            }
+
+            // Initialiser l'année si elle n'existe pas encore
+            if (!isset($esperanceParAnnee[$annee])) {
+                $esperanceParAnnee[$annee] = ['total' => 0, 'nb_pays' => 0];
+            }
+
+            // Ajouter les données pour l'année
+            $esperanceParAnnee[$annee]['total'] += $esperance;
+            $esperanceParAnnee[$annee]['nb_pays']++;
+        }
+    }
+
+    // Calculer la moyenne de l'espérance de vie par année
+    $moyenneEsperance = [];
+    foreach ($esperanceParAnnee as $annee => $data) {
+        if ($data['nb_pays'] > 0) {
+            $moyenneEsperance[$annee] = $data['total'] / $data['nb_pays'];
+        }
+    }
+
+    return $moyenneEsperance;
+}

@@ -1,84 +1,140 @@
-// Fonctions de génération des graphiques
-
 document.addEventListener("DOMContentLoaded", function () {
-    fetch('/DED/controllers/indicateurs.php') // ← Ajuste selon ton chemin réel
-        .then(response => response.json())
-        .then(data => {
-            const labels = Object.keys(data).sort();
-            const valeurs = labels.map(annee => data[annee]);
+    // Stocker les instances des graphiques pour éviter les doublons
+    let chartInstances = {};
 
-            const donnees = {
-                labels: labels,
-                datasets: [{
-                    label: "Moyenne du PIB Mondial (en $ US)",
-                    data: valeurs,
-                    borderColor: "blue",
-                    backgroundColor: "rgba(0, 0, 255, 0.1)",
-                    borderWidth: 2,
-                    pointRadius: 3,
-                    tension: 0.3, // ← Adoucit les courbes
-                    fill: true
-                }]
-            };
+    // Fonction générique pour créer un graphique
+    function creerGraphique(idCanvas, titre, labels, data, labelDataset, couleur) {
+        const ctx = document.getElementById(idCanvas).getContext("2d");
 
-            const whiteBackgroundPlugin = {
-                id: 'whiteBackground',
-                beforeDraw: (chart) => {
-                    const ctx = chart.canvas.getContext('2d');
-                    ctx.save();
-                    ctx.globalCompositeOperation = 'destination-over';
-                    ctx.fillStyle = 'white';
-                    ctx.fillRect(0, 0, chart.width, chart.height);
-                    ctx.restore();
-                }
-            };
+        // Détruire le graphique existant s'il existe
+        if (chartInstances[idCanvas]) {
+            chartInstances[idCanvas].destroy();
+        }
 
-            const config = {
-                type: 'line',
-                data: donnees,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: 'black',
-                                font: { size: 14 }
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: 'Évolution du PIB Mondial par Année',
+        const donnees = {
+            labels: labels,
+            datasets: [{
+                label: labelDataset,
+                data: data,
+                borderColor: couleur,
+                backgroundColor: `rgba(0, 0, 255, 0.1)`,
+                borderWidth: 2,
+                pointRadius: 3,
+                tension: 0.3,
+                fill: true
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: donnees,
+            options: {
+                responsive: true, // Activer le redimensionnement automatique
+                maintainAspectRatio: false, // Désactiver le maintien des proportions
+                plugins: {
+                    legend: {
+                        labels: {
                             color: 'black',
-                            font: { size: 18 }
+                            font: { size: 14 }
                         }
                     },
-                    scales: {
-                        x: {
-                            ticks: { color: 'black' },
-                            title: {
-                                display: true,
-                                text: "Années",
-                                color: 'black',
-                                font: { size: 14 }
-                            }
-                        },
-                        y: {
-                            ticks: { color: 'black' },
-                            title: {
-                                display: true,
-                                text: "PIB moyen (USD)",
-                                color: 'black',
-                                font: { size: 14 }
-                            },
-                            beginAtZero: false
-                        }
+                    title: {
+                        display: true,
+                        text: titre,
+                        color: 'black',
+                        font: { size: 18 }
                     }
                 },
-                plugins: [whiteBackgroundPlugin]
-            };
+                scales: {
+                    x: {
+                        ticks: { color: 'black' },
+                        title: {
+                            display: true,
+                            text: "Années",
+                            color: 'black',
+                            font: { size: 14 }
+                        }
+                    },
+                    y: {
+                        ticks: { color: 'black' },
+                        title: {
+                            display: true,
+                            text: "Valeurs",
+                            color: 'black',
+                            font: { size: 14 }
+                        },
+                        beginAtZero: false
+                    }
+                }
+            }
+        };
 
-            const ctx = document.getElementById("pibChart").getContext("2d");
-            new Chart(ctx, config);
-        })
-        .catch(error => console.error("Erreur lors du chargement des données:", error));
+        // Créer une nouvelle instance de graphique et la stocker
+        chartInstances[idCanvas] = new Chart(ctx, config);
+    }
+
+    // Fonction pour charger les données d'un graphique
+    function chargerDonnees(action, idCanvas, titre, labelDataset, couleur) {
+        fetch(`/DED/controllers/indicateurs.php?action=${action}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP ! statut : ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(`Données reçues pour ${idCanvas}:`, data);
+
+                if (data.error) {
+                    console.error(`Erreur pour le graphique ${idCanvas}:`, data.error);
+                    document.getElementById(idCanvas).parentElement.innerHTML = `<p style="color: red;">Erreur : ${data.error}</p>`;
+                    return;
+                }
+
+                const labels = Object.keys(data).sort(); // Années
+                const valeurs = labels.map(annee => data[annee]); // Valeurs correspondantes
+
+                console.log(`Labels pour ${idCanvas}:`, labels);
+                console.log(`Valeurs pour ${idCanvas}:`, valeurs);
+
+                creerGraphique(idCanvas, titre, labels, valeurs, labelDataset, couleur);
+            })
+            .catch(error => {
+                console.error(`Erreur lors du chargement des données pour ${idCanvas}:`, error);
+                document.getElementById(idCanvas).parentElement.innerHTML = `<p style="color: red;">Erreur lors du chargement des données.</p>`;
+            });
+    }
+
+    // Charger les données pour les graphiques
+    chargerDonnees(
+        'getMoyennePIBMondial',
+        'pibChart',
+        "Évolution du PIB Mondial par Année",
+        "Moyenne du PIB Mondial (en $ US)",
+        "blue"
+    );
+
+    chargerDonnees(
+        'getEsperanceVieMondiale',
+        'esperanceVieChart',
+        "Évolution de l'Espérance de Vie Mondiale",
+        "Moyenne de l'Espérance de Vie (en années)",
+        "green"
+    );
+
+    chargerDonnees(
+        'getPopulationMondiale',
+        'populationChart',
+        "Évolution de la Population Mondiale",
+        "Population Mondiale (en milliards)",
+        "red"
+    );
+
+    chargerDonnees(
+        'getAutreIndicateur',
+        'autreChart',
+        "Autre Indicateur",
+        "Valeurs de l'Indicateur",
+        "purple"
+    );
 });
