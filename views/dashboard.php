@@ -25,7 +25,15 @@
             </div>
         </td>
     </tr>
-</table>
 
+    <tr>
+        <td class="graph-cell">
+            <div class="graph-container">
+            <canvas id="ratioRegionsCurve"></canvas>
+            </div>
+        </td>
+    </tr>
+    
+</table>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="./public/js/graphiques.js"></script>

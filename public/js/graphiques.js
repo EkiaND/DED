@@ -105,6 +105,92 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
+    function chargerDonneesMultiplesCourbes(action, idCanvas, titre) {
+        fetch(`/DED/controllers/indicateurs.php?action=${action}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error(`Erreur pour le graphique ${idCanvas}:`, data.error);
+                    document.getElementById(idCanvas).parentElement.innerHTML = `<p style="color: red;">Erreur : ${data.error}</p>`;
+                    return;
+                }
+    
+                
+                const allYears = new Set();
+                Object.values(data).forEach(regionData => {
+                    Object.keys(regionData).forEach(year => allYears.add(year));
+                });
+                const labels = Array.from(allYears).sort();
+    
+                
+                const couleurs = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'teal', 'pink'];
+                let colorIndex = 0;
+    
+                
+                const datasets = Object.entries(data).map(([region, values]) => {
+                    const dataParAnnee = labels.map(annee => values[annee] ?? null);
+                    return {
+                        label: region,
+                        data: dataParAnnee,
+                        borderColor: couleurs[colorIndex++ % couleurs.length],
+                        fill: false,
+                        tension: 0.3,
+                        spanGaps: true
+                    };
+                });
+    
+                const ctx = document.getElementById(idCanvas).getContext("2d");
+    
+
+    
+                
+                chartInstances[idCanvas] = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: titre,
+                                color: 'black',
+                                font: { size: 18 }
+                            },
+                            legend: {
+                                labels: { color: 'black' }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: 'black' },
+                                title: {
+                                    display: true,
+                                    text: "Années",
+                                    color: 'black'
+                                }
+                            },
+                            y: {
+                                ticks: { color: 'black' },
+                                title: {
+                                    display: true,
+                                    text: "Ratio natalité / mortalité",
+                                    color: 'black'
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error(`Erreur lors du chargement des données pour ${idCanvas}:`, error);
+                document.getElementById(idCanvas).parentElement.innerHTML = `<p style="color: red;">Erreur lors du chargement des données.</p>`;
+            });
+    }
+
     // Charger les données pour les graphiques
     chargerDonnees(
         'getMoyennePIBMondial',
@@ -136,5 +222,11 @@ document.addEventListener("DOMContentLoaded", function () {
         "Autre Indicateur",
         "Valeurs de l'Indicateur",
         "purple"
+    );
+
+    chargerDonneesMultiplesCourbes(
+        'getRatioParRegionParAnnee',
+        'ratioRegionsCurve',
+        "Évolution du Ratio Natalité / Mortalité par Région"
     );
 });

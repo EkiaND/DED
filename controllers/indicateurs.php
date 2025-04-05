@@ -23,6 +23,10 @@ if (isset($_GET['action'])) {
         case 'getEsperanceVieMondiale':
             echo json_encode(getEsperanceVieMondiale());
             break;
+        
+        case 'getRatioParRegionParAnnee':
+            echo json_encode(getRatioParRegionParAnnee());
+            break;
 
         default:
             echo json_encode(['error' => 'Action non reconnue']);
@@ -138,3 +142,61 @@ function getEsperanceVieMondiale() {
 
     return $moyenneEsperance;
 }
+function getRatioParRegionParAnnee() {
+    $conn = getBDD();
+    $pays = getPays();
+    $dataParRegionAnnee = [];
+
+    if ($pays === null || !is_array($pays)) {
+        return ['error' => 'Aucun pays trouvé ou erreur de récupération des pays.'];
+    }
+
+    foreach ($pays as $paysInfo) {
+        $codePays = $paysInfo['code_pays'];
+
+        
+        $details = getDetailsPays($codePays);
+        if ($details === null || !isset($details['nom_region'])) {
+            continue;
+        }
+
+        $region = $details['nom_region'];
+
+        $valeursNatalite = getValeursIndicateur('taux_natalite', $codePays);
+        $valeursMortalite = getValeursIndicateur('taux_mortalite', $codePays);
+
+        if (empty($valeursNatalite) || empty($valeursMortalite)) {
+            continue;
+        }
+
+        foreach ($valeursNatalite as $index => $nataliteData) {
+            $annee = $nataliteData['annee'];
+            $tauxNatalite = $nataliteData['valeur'];
+            $tauxMortalite = $valeursMortalite[$index]['valeur'] ?? null;
+
+            if (is_null($tauxNatalite) || is_null($tauxMortalite) || $tauxMortalite <= 0) {
+                continue;
+            }
+
+            if (!isset($dataParRegionAnnee[$region][$annee])) {
+                $dataParRegionAnnee[$region][$annee] = ['total' => 0, 'nb' => 0];
+            }
+
+            $dataParRegionAnnee[$region][$annee]['total'] += $tauxNatalite / $tauxMortalite;
+            $dataParRegionAnnee[$region][$annee]['nb']++;
+        }
+    }
+
+    // Moyenne par région et année
+    $resultat = [];
+    foreach ($dataParRegionAnnee as $region => $annees) {
+        foreach ($annees as $annee => $data) {
+            if ($data['nb'] > 0) {
+                $resultat[$region][$annee] = round($data['total'] / $data['nb'], 2);
+            }
+        }
+    }
+
+    return $resultat;
+}
+
