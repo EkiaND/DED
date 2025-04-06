@@ -1,10 +1,100 @@
+// Stocker les instances des graphiques pour éviter les doublons
+let chartInstances = {};
+
+function creerGraphiqueComparaison(idCanvas, titre, labels, data1, data2, label1, label2) {
+
+    const canvas = document.getElementById(idCanvas);
+    if (!canvas) {
+        console.warn(`Canvas avec l'id '${idCanvas}' introuvable — graphique ignoré.`);
+        return;
+    }
+
+    const ctx = canvas.getContext("2d");
+    
+    
+    // Supprime l'ancien graphe s'il existe déjà
+    if (chartInstances[idCanvas]) {
+        chartInstances[idCanvas].destroy();
+    }
+
+    chartInstances[idCanvas] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: label1,
+                    data: data1,
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                    fill: false,
+                    tension: 0.3
+                },
+                {
+                    label: label2,
+                    data: data2,
+                    borderColor: 'orange',
+                    backgroundColor: 'rgba(255, 165, 0, 0.1)',
+                    fill: false,
+                    tension: 0.3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: titre,
+                    color: 'black',
+                    font: { size: 18 }
+                },
+                legend: {
+                    labels: { color: 'black' }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: 'black' },
+                    title: {
+                        display: true,
+                        text: "Années",
+                        color: 'black',
+                        font: { size: 14 }
+                    }
+                },
+                y: {
+                    ticks: { color: 'black' },
+                    title: {
+                        display: true,
+                        text: "Valeurs",
+                        color: 'black',
+                        font: { size: 14 }
+                    },
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+}
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
-    // Stocker les instances des graphiques pour éviter les doublons
-    let chartInstances = {};
+
 
     // Fonction générique pour créer un graphique
     function creerGraphique(idCanvas, titre, labels, data, labelDataset, couleur) {
-        const ctx = document.getElementById(idCanvas).getContext("2d");
+
+        const canvas = document.getElementById(idCanvas);
+        if (!canvas) {
+            console.warn(`Canvas avec l'id '${idCanvas}' introuvable — graphique ignoré.`);
+            return;
+        }
+
+        const ctx = canvas.getContext("2d");
+        
 
         // Détruire le graphique existant s'il existe
         if (chartInstances[idCanvas]) {
@@ -73,6 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
         chartInstances[idCanvas] = new Chart(ctx, config);
     }
 
+
     // Fonction pour charger les données d'un graphique
     function chargerDonnees(action, idCanvas, titre, labelDataset, couleur) {
         fetch(`/DED/controllers/indicateurs.php?action=${action}`)
@@ -84,24 +175,34 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .then(data => {
                 console.log(`Données reçues pour ${idCanvas}:`, data);
-
-                if (data.error) {
-                    console.error(`Erreur pour le graphique ${idCanvas}:`, data.error);
-                    document.getElementById(idCanvas).parentElement.innerHTML = `<p style="color: red;">Erreur : ${data.error}</p>`;
+    
+                const canvas = document.getElementById(idCanvas);
+                if (!canvas) {
+                    console.warn(`Canvas avec l'id '${idCanvas}' introuvable — graphique ignoré.`);
                     return;
                 }
+    
+                if (data.error) {
+                    console.error(`Erreur pour le graphique ${idCanvas}:`, data.error);
+                    canvas.parentElement.innerHTML = `<p style="color: red;">Erreur : ${data.error}</p>`;
+                    return;
+                }
+    
+                const labels = Object.keys(data).sort();
 
-                const labels = Object.keys(data).sort(); // Années
-                const valeurs = labels.map(annee => data[annee]); // Valeurs correspondantes
-
+                const valeurs = labels.map(annee => data[annee]);
+    
                 console.log(`Labels pour ${idCanvas}:`, labels);
                 console.log(`Valeurs pour ${idCanvas}:`, valeurs);
-
+    
                 creerGraphique(idCanvas, titre, labels, valeurs, labelDataset, couleur);
             })
             .catch(error => {
                 console.error(`Erreur lors du chargement des données pour ${idCanvas}:`, error);
-                document.getElementById(idCanvas).parentElement.innerHTML = `<p style="color: red;">Erreur lors du chargement des données.</p>`;
+                const canvas = document.getElementById(idCanvas);
+                if (canvas) {
+                    canvas.parentElement.innerHTML = `<p style="color: red;">Erreur lors du chargement des données.</p>`;
+                }
             });
     }
 
@@ -109,24 +210,28 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(`/DED/controllers/indicateurs.php?action=${action}`)
             .then(response => response.json())
             .then(data => {
-                if (data.error) {
-                    console.error(`Erreur pour le graphique ${idCanvas}:`, data.error);
-                    document.getElementById(idCanvas).parentElement.innerHTML = `<p style="color: red;">Erreur : ${data.error}</p>`;
+                const canvas = document.getElementById(idCanvas);
+                if (!canvas) {
+                    console.warn(`Canvas avec l'id '${idCanvas}' introuvable — graphique ignoré.`);
                     return;
                 }
     
-                
+                if (data.error) {
+                    console.error(`Erreur pour le graphique ${idCanvas}:`, data.error);
+                    canvas.parentElement.innerHTML = `<p style="color: red;">Erreur : ${data.error}</p>`;
+                    return;
+                }
+    
                 const allYears = new Set();
                 Object.values(data).forEach(regionData => {
                     Object.keys(regionData).forEach(year => allYears.add(year));
                 });
                 const labels = Array.from(allYears).sort();
-    
                 
+    
                 const couleurs = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'teal', 'pink'];
                 let colorIndex = 0;
     
-                
                 const datasets = Object.entries(data).map(([region, values]) => {
                     const dataParAnnee = labels.map(annee => values[annee] ?? null);
                     return {
@@ -139,11 +244,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     };
                 });
     
-                const ctx = document.getElementById(idCanvas).getContext("2d");
+                const ctx = canvas.getContext("2d");
     
-
-    
-                
                 chartInstances[idCanvas] = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -187,46 +289,62 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(error => {
                 console.error(`Erreur lors du chargement des données pour ${idCanvas}:`, error);
-                document.getElementById(idCanvas).parentElement.innerHTML = `<p style="color: red;">Erreur lors du chargement des données.</p>`;
+                const canvas = document.getElementById(idCanvas);
+                if (canvas) {
+                    canvas.parentElement.innerHTML = `<p style="color: red;">Erreur lors du chargement des données.</p>`;
+                }
             });
     }
+    
 
     // Charger les données pour les graphiques
-    chargerDonnees(
-        'getMoyennePIBMondial',
-        'pibChart',
-        "Évolution du PIB Mondial par Année",
-        "Moyenne du PIB Mondial (en $ US)",
-        "blue"
-    );
+    if (document.getElementById('pibChart')) {
+        chargerDonnees(
+            'getMoyennePIBMondial',
+            'pibChart',
+            "Évolution du PIB Mondial par Année",
+            "Moyenne du PIB Mondial (en $ US)",
+            "blue"
+        );
+    }
 
-    chargerDonnees(
-        'getEsperanceVieMondiale',
-        'esperanceVieChart',
-        "Évolution de l'Espérance de Vie Mondiale",
-        "Moyenne de l'Espérance de Vie (en années)",
-        "green"
-    );
+    if (document.getElementById('esperanceVieChart')) {
+        chargerDonnees(
+            'getEsperanceVieMondiale',
+            'esperanceVieChart',
+            "Évolution de l'Espérance de Vie Mondiale",
+            "Moyenne de l'Espérance de Vie (en années)",
+            "green"
+        );
+    }
 
-    chargerDonnees(
-        'getPopulationMondiale',
-        'populationChart',
-        "Évolution de la Population Mondiale",
-        "Population Mondiale (en milliards)",
-        "red"
-    );
+    if (document.getElementById('populationChart')) {
+        chargerDonnees(
+            'getPopulationMondiale',
+            'populationChart',
+            "Évolution de la Population Mondiale",
+            "Population Mondiale (en milliards)",
+            "red"
+        );
+    }  
 
-    chargerDonnees(
-        'getAutreIndicateur',
-        'autreChart',
-        "Autre Indicateur",
-        "Valeurs de l'Indicateur",
-        "purple"
-    );
+    if (document.getElementById('autreChart')) {
+        chargerDonnees(
+            'getAutreIndicateur',
+            'autreChart',
+            "Autre Indicateur",
+            "Valeurs de l'Indicateur",
+            "purple"
+        );
+    }    
 
-    chargerDonneesMultiplesCourbes(
-        'getRatioParRegionParAnnee',
-        'ratioRegionsCurve',
-        "Évolution du Ratio Natalité / Mortalité par Région"
-    );
+    if (document.getElementById('ratioRegionsCurve')) {
+        chargerDonneesMultiplesCourbes(
+            'getRatioParRegionParAnnee',
+            'ratioRegionsCurve',
+            "Évolution du Ratio Natalité / Mortalité par Région"
+        );
+    }
+    
 });
+
