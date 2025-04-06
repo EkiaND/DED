@@ -62,6 +62,11 @@ function getIndicateurs() {
     }
 }
 
+if (isset($_GET['action']) && $_GET['action'] === 'getIndicateurs') {
+    echo json_encode(getIndicateurs());
+    exit;
+}
+
 /**
  * Récupérer les valeurs d'un indicateur pour un pays spécifique sur plusieurs années.
  *

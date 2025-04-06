@@ -32,6 +32,11 @@ function getPays() {
     }
 }
 
+if (isset($_GET['action']) && $_GET['action'] === 'getPays') {
+    echo json_encode(getPays());
+    exit;
+}
+
 /**
  * Récupérer les détails d'un pays.
  *
