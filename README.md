@@ -127,6 +127,7 @@ DED/
 - **LESUEUR Romain**
 - **YON Anthony**
 - **DIOP Mandir**
+- **SAINT-HUBERT Courteney**
 
 Voici une version corrigée et clarifiée de la répartition des tâches pour votre projet :
 
