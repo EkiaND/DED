@@ -128,6 +128,71 @@ li a:hover {
     box-sizing: border-box; /* Inclure le padding dans les dimensions */
 }
 
+
+/* Style pour les boutons selections */
+#graphTable td[rowspan="5"] {
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 14px;
+    vertical-align: top;
+    width: 260px;
+}
+
+/* 🏷️ Labels avec espace et style propre */
+#graphTable label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* 🔽 Selects stylés */
+#graphTable select {
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #fdfdfd;
+    transition: border-color 0.3s;
+}
+
+#graphTable select:focus {
+    border-color: #1976d2;
+    outline: none;
+}
+
+/* 🔘 Bouton "Comparer" moderne */
+#bouton_comparer {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #1976d2;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#bouton_comparer:hover {
+    background-color: #145ca1;
+}
+
+/* ⚠️ Message d’erreur rouge et espacé */
+#erreur {
+    margin-top: 12px;
+    color: red;
+    font-size: 13px;
+}
+
+
 /* Style pour le footer */
 footer {
     background-color: #333;
