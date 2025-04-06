@@ -29,6 +29,20 @@ document.addEventListener("DOMContentLoaded", function () {
         .append("div")
         .attr("id", "tooltip");
 
+    const backButton = d3.select("#map-container")
+        .append("button")
+        .attr("id", "backButton")
+        .text("Retour à la vue région")
+        .style("display", "none") // Hidden by default
+        .on("click", () => {
+            currentView = "regions";
+            focusedRegion = null;
+            backButton.style("display", "none");
+            const indicator = document.getElementById("indicatorSelect").value;
+            const year = document.getElementById("yearSelect").value;
+            updateMap(indicator, year);
+        });
+
     let currentView = "regions"; // Vue actuelle : "regions" ou "countries"
     let focusedRegion = null; // Région actuellement sélectionnée (si applicable)
     let isFetching = false; // Prevent duplicate fetch requests
@@ -37,6 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (currentView === "regions") {
             updateRegions(indicator, year);
         } else if (currentView === "countries" && focusedRegion) {
+            backButton.style("display", "block"); // Show back button in countries view
             console.log(`Fetching data for countries: indicator=${indicator}, year=${year}, region=${focusedRegion}`);
             fetch(`./controllers/indicateurs.php?action=getDistributionIndicateurParPays&idIndicateur=${indicator}&annee=${year}&region=${encodeURIComponent(focusedRegion)}`)
                 .then(response => {
@@ -140,6 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateRegions(indicator, year) {
         console.log(`Mise à jour des régions pour l'indicateur: ${indicator}, année: ${year}`);
+        backButton.style("display", "none"); // Hide back button in regions view
         Promise.all([
             d3.json("./public/data/regions.geojson"),
             fetch(`./controllers/indicateurs.php?action=getDistributionIndicateurParRegion&idIndicateur=${indicator}&annee=${year}`)
@@ -199,6 +215,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.log(`Zoom sur la région : ${region}`);
                     currentView = "countries";
                     focusedRegion = region;
+
+                    // Show the back button
+                    backButton.style("display", "block");
 
                     // Déclencher un événement personnalisé pour charger les pays
                     const regionDblClickEvent = new CustomEvent("regionDblClick", {
