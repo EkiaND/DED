@@ -7,6 +7,7 @@ error_reporting(E_ALL);
 // Inclure les modèles nécessaires
 require_once __DIR__ . '/../models/indicateur.php';
 require_once __DIR__ . '/../models/pays.php';
+require_once __DIR__ . '/../models/data.php'; // Inclure le fichier contenant la fonction getDistributionIndicateurParRegion
 
 // Définir le type de contenu comme JSON
 header('Content-Type: application/json');
@@ -26,6 +27,39 @@ if (isset($_GET['action'])) {
         
         case 'getRatioParRegionParAnnee':
             echo json_encode(getRatioParRegionParAnnee());
+            break;
+
+        case 'getDistributionIndicateurParRegion':
+            if (isset($_GET['idIndicateur'], $_GET['annee'])) {
+                $idIndicateur = $_GET['idIndicateur'];
+                $annee = (int)$_GET['annee'];
+                echo getDistributionIndicateurParRegion($idIndicateur, $annee);
+            } else {
+                echo json_encode(['error' => 'Paramètres manquants']);
+            }
+            break;
+
+        case 'getDistributionIndicateurParPays':
+            if (isset($_GET['idIndicateur'], $_GET['annee'], $_GET['region'])) {
+                $idIndicateur = $_GET['idIndicateur'];
+                $annee = (int)$_GET['annee'];
+                $region = urldecode($_GET['region']); // Décoder le nom de la région
+                error_log("Nom de la région après décodage : $region");
+                error_log("Paramètres reçus : idIndicateur=$idIndicateur, annee=$annee, region=$region");
+                echo getDistributionIndicateurParPays($idIndicateur, $annee, $region);
+            } else {
+                error_log("Paramètres manquants pour getDistributionIndicateurParPays");
+                echo json_encode(['error' => 'Paramètres manquants']);
+            }
+            break;
+
+        case 'getCountryData':
+            if (isset($_GET['codePays'])) {
+                $codePays = $_GET['codePays'];
+                echo json_encode(getCountryData($codePays));
+            } else {
+                echo json_encode(['error' => 'Paramètre codePays manquant']);
+            }
             break;
 
         default:

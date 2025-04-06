@@ -119,7 +119,6 @@ function getCorrelationEntreIndicateurs($idIndicateur1, $idIndicateur2, $filtre 
     }
 }
 
-
 /**
  * Obtenir l'évolution d'un indicateur dans le temps pour une région donnée.
  *
@@ -197,7 +196,7 @@ function getEvolutionIndicateurParRegion($idIndicateur, $idRegion) {
  *
  * @param string $idIndicateur Nom de l'indicateur.
  * @param int $annee Année pour laquelle récupérer la distribution.
- * @return array Liste des régions et des valeurs moyennes de l'indicateur.
+ * @return string JSON contenant la liste des régions et des valeurs moyennes de l'indicateur.
  */
 function getDistributionIndicateurParRegion($idIndicateur, $annee) {
     try {
@@ -221,7 +220,159 @@ function getDistributionIndicateurParRegion($idIndicateur, $annee) {
         }
 
         $res = mysqli_stmt_get_result($stmt);
-        return mysqli_fetch_all($res, MYSQLI_ASSOC) ?: [];
+        $data = mysqli_fetch_all($res, MYSQLI_ASSOC) ?: [];
+        return json_encode($data); // Retourne un JSON valide
+    } catch (Exception $e) {
+        return json_encode([]); // Retourne un tableau vide en cas d'erreur
+    }
+}
+
+/**
+ * Map country codes from the database to match those in world.geojson.
+ *
+ * @param string $codePays Code from the database.
+ * @return string Mapped code for world.geojson.
+ */
+function mapCountryCode($codePays) {
+    $mapping = [
+        'CYN' => 'CYP', // Northern Cyprus to Cyprus
+        'KOS' => 'SRB', // Kosovo to Serbia
+        'GRL' => 'DNK', // Greenland to Denmark
+        'CHI' => 'CHE', // Switzerland
+        'MKD' => 'MKD', // North Macedonia
+        'GBR' => 'GBR', // United Kingdom
+        'DEU' => 'DEU', // Germany
+        'FRA' => 'FRA', // France
+        'ITA' => 'ITA', // Italy
+        'RUS' => 'RUS', // Russia
+        'ESP' => 'ESP', // Spain
+        'NLD' => 'NLD', // Netherlands
+        'TUR' => 'TUR', // Turkey
+        'CHE' => 'CHE', // Switzerland
+        'POL' => 'POL', // Poland
+        'SWE' => 'SWE', // Sweden
+        'BEL' => 'BEL', // Belgium
+        'AUT' => 'AUT', // Austria
+        'NOR' => 'NOR', // Norway
+        'IRL' => 'IRL', // Ireland
+        'DNK' => 'DNK', // Denmark
+        'FIN' => 'FIN', // Finland
+        'CZE' => 'CZE', // Czechia
+        'ROU' => 'ROU', // Romania
+        'PRT' => 'PRT', // Portugal
+        'GRC' => 'GRC', // Greece
+        'KAZ' => 'KAZ', // Kazakhstan
+        'HUN' => 'HUN', // Hungary
+        'UKR' => 'UKR', // Ukraine
+        'SVK' => 'SVK', // Slovakia
+        'LUX' => 'LUX', // Luxembourg
+        'BGR' => 'BGR', // Bulgaria
+        'HRV' => 'HRV', // Croatia
+        'BLR' => 'BLR', // Belarus
+        'SVN' => 'SVN', // Slovenia
+        'LTU' => 'LTU', // Lithuania
+        'SRB' => 'SRB', // Serbia
+        'UZB' => 'UZB', // Uzbekistan
+        'AZE' => 'AZE', // Azerbaijan
+        'TKM' => 'TKM', // Turkmenistan
+        'LVA' => 'LVA', // Latvia
+        'EST' => 'EST', // Estonia
+        'ISL' => 'ISL', // Iceland
+        'CYP' => 'CYP', // Cyprus
+        'BIH' => 'BIH', // Bosnia and Herzegovina
+        'GEO' => 'GEO', // Georgia
+        'ALB' => 'ALB', // Albania
+        'MKD' => 'MKD', // North Macedonia
+        'ARM' => 'ARM', // Armenia
+        'MDA' => 'MDA', // Moldova
+        'KGZ' => 'KGZ', // Kyrgyzstan
+        'TJK' => 'TJK', // Tajikistan
+        'MNE' => 'MNE', // Montenegro
+        'AND' => 'AND', // Andorra
+    ];
+    return $mapping[$codePays] ?? $codePays;
+}
+
+/**
+ * Récupérer la distribution d'un indicateur par pays pour une région donnée et une année.
+ *
+ * @param string $idIndicateur Nom de l'indicateur.
+ * @param int $annee Année pour laquelle récupérer la distribution.
+ * @param string $nomRegion Nom de la région.
+ * @return string JSON contenant la liste des pays et des valeurs de l'indicateur.
+ */
+function getDistributionIndicateurParPays($idIndicateur, $annee, $nomRegion) {
+    try {
+        $conn = getBDD();
+        $query = "SELECT p.nom_pays AS nom_pays_bdd, p.code_pays, i.$idIndicateur AS valeur
+                  FROM indicateurs AS i
+                  JOIN pays AS p ON i.code_pays = p.code_pays
+                  JOIN regions AS r ON p.id_region = r.id_region
+                  WHERE i.annee = ? AND r.nom_region = ? AND i.$idIndicateur IS NOT NULL
+                  ORDER BY valeur DESC;";
+        $stmt = mysqli_prepare($conn, $query);
+
+        if ($stmt === false) {
+            error_log("Erreur de préparation SQL : " . mysqli_error($conn)); // Log en cas d'erreur de préparation
+            throw new Exception(mysqli_error($conn));
+        }
+
+        error_log("Exécution de la requête : $query avec annee=$annee et nomRegion=$nomRegion");
+        mysqli_stmt_bind_param($stmt, "is", $annee, $nomRegion);
+        if (!mysqli_stmt_execute($stmt)) {
+            error_log("Erreur d'exécution SQL : " . mysqli_error($conn)); // Log en cas d'erreur d'exécution
+            throw new Exception(mysqli_error($conn));
+        }
+
+        $res = mysqli_stmt_get_result($stmt);
+        $data = mysqli_fetch_all($res, MYSQLI_ASSOC) ?: [];
+
+        if (empty($data)) {
+            error_log("Aucune donnée trouvée pour la région $nomRegion et l'année $annee.");
+        } else {
+            error_log("Données retournées : " . json_encode($data));
+        }
+
+        // Map country codes to match world.geojson
+        $mappedData = [];
+        foreach ($data as $row) {
+            $mappedData[] = [
+                'nom_pays_geojson' => mapCountryCode($row['code_pays']),
+                'valeur' => $row['valeur']
+            ];
+        }
+        error_log("Codes pays mappés : " . json_encode(array_column($mappedData, 'nom_pays_geojson')));
+
+        return json_encode($mappedData); // Retourne un JSON valide
+    } catch (Exception $e) {
+        error_log("Exception capturée : " . $e->getMessage()); // Log des exceptions
+        return json_encode([]); // Retourne un tableau vide en cas d'erreur
+    }
+}
+
+/**
+ * Récupérer les données pour un pays spécifique.
+ *
+ * @param string $codePays Code du pays.
+ * @return array Données du pays sous forme de tableau associatif.
+ */
+function getCountryData($codePays) {
+    try {
+        $conn = getBDD();
+        $query = "SELECT * FROM indicateurs WHERE code_pays = ? ORDER BY annee DESC LIMIT 1;";
+        $stmt = mysqli_prepare($conn, $query);
+
+        if ($stmt === false) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        mysqli_stmt_bind_param($stmt, "s", $codePays);
+        if (!mysqli_stmt_execute($stmt)) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        $res = mysqli_stmt_get_result($stmt);
+        return mysqli_fetch_assoc($res) ?: [];
     } catch (Exception $e) {
         logError($e->getMessage(), __FILE__, __LINE__);
         return [];
