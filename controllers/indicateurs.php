@@ -27,6 +27,44 @@ if (isset($_GET['action'])) {
         case 'getRatioParRegionParAnnee':
             echo json_encode(getRatioParRegionParAnnee());
             break;
+        
+        case 'getPopulationMondiale':
+            echo json_encode(getPopulationMondiale());
+            break;
+            
+        case 'getAutreIndicateur':
+            echo json_encode(getAutreIndicateur());
+            break;
+        
+        case 'comparerPays':
+            $pays1 = $_GET['pays1'] ?? null;
+            $pays2 = $_GET['pays2'] ?? null;
+            $indicateur = $_GET['indicateur'] ?? null;
+        
+            if (!$pays1 || !$pays2 || !$indicateur || $pays1 === $pays2) {
+                echo json_encode(['error' => 'Paramètres invalides.']);
+                exit;
+            }
+            
+            $valeurs1 = getValeursIndicateur($indicateur, $pays1);
+            $valeurs2 = getValeursIndicateur($indicateur, $pays2);
+            
+            $annees = array_map(fn($v) => $v['annee'], $valeurs1);
+            $valeursPays1 = array_map(fn($v) => $v['valeur'], $valeurs1);
+            $valeursPays2 = array_map(fn($v) => $v['valeur'], $valeurs2);
+            
+            $details1 = getDetailsPays($pays1);
+            $details2 = getDetailsPays($pays2);
+            
+            echo json_encode([
+                'indicateur' => $indicateur,
+                'nomPays1' => $details1['nom_pays'] ?? $pays1,
+                'nomPays2' => $details2['nom_pays'] ?? $pays2,
+                'annees' => $annees,
+                'valeurs1' => $valeursPays1,
+                'valeurs2' => $valeursPays2
+            ]);
+            exit;
 
         default:
             echo json_encode(['error' => 'Action non reconnue']);
