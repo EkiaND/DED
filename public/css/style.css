@@ -1,7 +1,7 @@
 /* Styles principaux */
 
 body {
-    background-color: #255;
+    background-color: #007bff;
     margin: 0;
     padding: 0;
     font-family: 'Inter', sans-serif;
@@ -10,27 +10,34 @@ body {
 /* Style pour le header */
 #main-header {
     display: flex;
-    justify-content: flex-start; /* Positionner l'image à gauche */
-    align-items: center; /* Centrer verticalement les éléments */
-    background-color: #007bff;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
-    width: 100%; /* Assurer que le header occupe toute la largeur de l'écran */
-    box-sizing: border-box; /* Assurer que le padding n'affecte pas la largeur totale */
-    position: relative; /* Permet de centrer l'élément h1 */
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#main-header h1 {
+    flex-grow: 1;
+    text-align: center;
+    color: white;
+    margin: 0 20px;
 }
 
 #main-header img {
-    width: 150px; /* Ajuste la taille de l'image */
-    margin-right: 20px; /* Ajoute un peu d'espace entre l'image et le texte */
+    height: 80px;
 }
 
-/* Style pour le h1 */
-#main-header h1 {
-    color: white;
-    font-size: 2.5rem;
-    margin: 0;
+#main-header .auteurs {
+    margin-top: 20px;
     text-align: center;
-    flex-grow: 1;
+    color: white;
+    font-weight: 500;
 }
 
 /* Style pour la navigation */
@@ -119,4 +126,52 @@ li a:hover {
     width: 100%; /* Le graphique occupe toute la largeur de son conteneur */
     height: 90%; /* Le graphique occupe 90% de la hauteur de son conteneur */
     box-sizing: border-box; /* Inclure le padding dans les dimensions */
+}
+
+/* Style pour le footer */
+footer {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    font-size: 14px;
+}
+
+.footer-table {
+    width: 100%;
+    text-align: center;
+    table-layout: fixed;
+}
+
+.footer-left,
+.footer-center,
+.footer-right {
+    padding: 5px 10px;
+    vertical-align: middle;
+}
+
+.footer-left {
+    text-align: left;
+    padding-left: 20px;
+}
+
+.footer-center {
+    text-align: center;
+    font-weight: bold;
+}
+
+.footer-right {
+    text-align: right;
+    padding-right: 20px;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
 }
