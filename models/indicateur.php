@@ -108,9 +108,34 @@ function getValeursIndicateur($idIndicateur, $codePays) {
  * @return float|null Moyenne de l'indicateur pour la région. Retourne null en cas d'erreur.
  */
 function getMoyenneIndicateurParRegion($idIndicateur, $idRegion) {
-    
-}
+    try {
+        $conn = getBDD();
 
+        // Requête avec jointure entre les tables 'indicateurs' et 'pays'
+        $query = "SELECT AVG(i.$idIndicateur) AS moyenne 
+                  FROM indicateurs i
+                  INNER JOIN pays p ON i.code_pays = p.code_pays
+                  WHERE p.id_region = ? AND i.$idIndicateur IS NOT NULL";
+
+        $stmt = mysqli_prepare($conn, $query);
+        if ($stmt === false) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        mysqli_stmt_bind_param($stmt, "s", $idRegion);
+        if (!mysqli_stmt_execute($stmt)) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        $res = mysqli_stmt_get_result($stmt);
+        $row = mysqli_fetch_assoc($res);
+
+        return $row['moyenne'] ?? null;
+    } catch (Exception $e) {
+        logError($e->getMessage(), __FILE__, __LINE__);
+        return null;
+    }
+}
 /**
  * Récupérer les indicateurs disponibles pour une année spécifique.
  *
@@ -119,6 +144,38 @@ function getMoyenneIndicateurParRegion($idIndicateur, $idRegion) {
  *               Retourne un tableau vide en cas d'erreur.
  */
 function getIndicateursParAnnee($annee) {
-    ùobb&acmv ihk acouacuoauvcoacvuyacvuoika cihaciahkc iazhk izhck
+    try {
+        $conn = getBDD();
+
+        // Construire dynamiquement la liste des colonnes à sélectionner, sauf id, code_pays, annee
+        $colonnes = getIndicateurs(); // appel à la fonction déjà définie
+
+        if (empty($colonnes)) {
+            throw new Exception("Aucun indicateur trouvé dans la table.");
+        }
+
+        $nomsColonnes = array_map(fn($col) => $col['nom_indicateur'], $colonnes);
+        $select = implode(', ', $nomsColonnes);
+
+        $query = "SELECT code_pays, $select 
+                  FROM indicateurs 
+                  WHERE annee = ?";
+
+        $stmt = mysqli_prepare($conn, $query);
+        if ($stmt === false) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        mysqli_stmt_bind_param($stmt, "i", $annee);
+        if (!mysqli_stmt_execute($stmt)) {
+            throw new Exception(mysqli_error($conn));
+        }
+
+        $res = mysqli_stmt_get_result($stmt);
+        return mysqli_fetch_all($res, MYSQLI_ASSOC) ?: [];
+    } catch (Exception $e) {
+        logError($e->getMessage(), __FILE__, __LINE__);
+        return [];
+    }
 }
 ?>
