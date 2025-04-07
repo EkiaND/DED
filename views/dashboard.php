@@ -13,20 +13,7 @@
         </td>
     </tr>
     <tr>
-        <td class="graph-cell">
-            <div class="graph-container">
-                <h3>Autre Indicateur</h3>
-                <canvas id="autreChart"></canvas>
-            </div>
-        </td>
-        <td class="graph-cell">
-            <div class="graph-container">
-                <canvas id="ratioRegionsCurve"></canvas>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td class="graph-cell">
+    <td class="graph-cell">
             <div class="graph-container">
                 <div id="map-container">
                     <div id="controls">
@@ -44,9 +31,8 @@
             </div>
         </td>
         <td class="graph-cell">
-            <!-- Cellule vide pour maintenir la symétrie ou pour un futur graphique -->
             <div class="graph-container">
-                <!-- Vous pouvez ajouter un contenu ici si nécessaire -->
+                <canvas id="ratioRegionsCurve"></canvas>
             </div>
         </td>
     </tr>
