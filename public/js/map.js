@@ -25,9 +25,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
     svg.call(zoom);
 
-    const tooltip = d3.select("#map-container")
+    // Suppression de l'ancien tooltip s'il existe
+    d3.select("#tooltip").remove();
+
+    // Création d'un nouveau tooltip
+    const tooltip = d3.select("body")  // Attaché au body pour éviter les problèmes de débordement
         .append("div")
-        .attr("id", "tooltip");
+        .attr("id", "tooltip")
+        .style("position", "absolute")
+        .style("background", "rgba(0, 0, 0, 0.85)")
+        .style("color", "white")
+        .style("padding", "10px")
+        .style("border-radius", "5px")
+        .style("pointer-events", "none")
+        .style("font-size", "0.9rem")
+        .style("z-index", "10000")
+        .style("box-shadow", "0 4px 8px rgba(0, 0, 0, 0.3)")
+        .style("display", "none")  // Hidden by default
+        .style("max-width", "250px");
+
+    // Fonction pour afficher le tooltip
+    function showTooltip(event, content) {
+        tooltip
+            .html(content)
+            .style("left", (event.pageX + 15) + "px")
+            .style("top", (event.pageY + 15) + "px")
+            .style("display", "block");
+    }
+
+    // Fonction pour cacher le tooltip
+    function hideTooltip() {
+        tooltip.style("display", "none");
+    }
 
     const backButton = d3.select("#map-container")
         .append("button")
@@ -86,10 +115,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 values[d.nom_pays_geojson] = d.valeur;
             });
 
-            console.log("Mapping des valeurs par pays :", values);
-            console.log("Codes pays dans la base de données :", Object.keys(values));
-            console.log("Codes pays dans world.geojson :", geojson.features.map(f => f.properties.ADM0_A3));
-
             const maxValue = d3.max(Object.values(values));
             colorScale.domain([0, maxValue]);
 
@@ -112,21 +137,47 @@ document.addEventListener("DOMContentLoaded", function () {
                 .attr("stroke-width", 1.5)
                 .on("mouseover", function (event, d) {
                     const countryCode = d.properties.ADM0_A3;
-                    const value = values[countryCode] || "Données non disponibles";
-
-                    tooltip
-                        .html(`<strong>${d.properties.SOVEREIGNT}</strong><br>Valeur: ${value}`)
-                        .style("left", `${event.pageX + 15}px`)
-                        .style("top", `${event.pageY + 15}px`)
-                        .classed("visible", true);
+                    const countryName = d.properties.SOVEREIGNT;
+                    const value = values[countryCode];
+                    
+                    // Format the value with 2 decimal places if it's a number
+                    const formattedValue = value === undefined ? "Données non disponibles" : parseFloat(value).toFixed(2);
+                    
+                    // Get the indicator name
+                    const indicatorSelect = document.getElementById("indicatorSelect");
+                    const indicatorName = indicatorSelect.options[indicatorSelect.selectedIndex].text;
+                    
+                    const content = `
+                        <div style="font-weight: bold; font-size: 14px; margin-bottom: 5px;">${countryName}</div>
+                        <div style="font-size: 12px;">
+                            <span style="font-weight: 600;">${indicatorName}:</span> 
+                            <span style="font-weight: 500; color: #8dcaff;">${formattedValue}</span>
+                        </div>
+                        <div style="font-size: 11px; color: #bbb; margin-top: 3px;">
+                            Région: ${region}<br>
+                            Année: ${year}
+                        </div>
+                    `;
+                    
+                    showTooltip(event, content);
+                    
+                    // Highlight the active country
+                    d3.select(this)
+                        .attr("stroke-width", 2.5)
+                        .attr("stroke", "#FF5733");
                 })
                 .on("mousemove", function (event) {
                     tooltip
-                        .style("left", `${event.pageX + 15}px`)
-                        .style("top", `${event.pageY + 15}px`);
+                        .style("left", (event.pageX + 15) + "px")
+                        .style("top", (event.pageY + 15) + "px");
                 })
                 .on("mouseout", function () {
-                    tooltip.classed("visible", false);
+                    hideTooltip();
+                    
+                    // Reset the highlight
+                    d3.select(this)
+                        .attr("stroke-width", 1.5)
+                        .attr("stroke", "#000");
                 })
                 .on("click", function (event, d) {
                     const countryCode = d.properties.ADM0_A3;
@@ -153,6 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Exposer la fonction dans le contexte global
     window.updateCountries = updateCountries;
 
+    // Fonction pour mettre à jour les régions (remplacez votre fonction existante)
     function updateRegions(indicator, year) {
         console.log(`Mise à jour des régions pour l'indicateur: ${indicator}, année: ${year}`);
         backButton.style("display", "none"); // Hide back button in regions view
@@ -190,20 +242,44 @@ document.addEventListener("DOMContentLoaded", function () {
                 .on("mouseover", function (event, d) {
                     const region = d.properties.region || d.properties.nom_region;
                     const value = values[region] || "Données non disponibles";
-
-                    tooltip
-                        .html(`<strong>${region}</strong><br>Valeur: ${value}`)
-                        .style("left", `${event.pageX + 15}px`)
-                        .style("top", `${event.pageY + 15}px`)
-                        .classed("visible", true);
+                    
+                    // Format the value with 2 decimal places if it's a number
+                    const formattedValue = isNaN(value) ? value : parseFloat(value).toFixed(2);
+                    
+                    // Get the indicator name
+                    const indicatorSelect = document.getElementById("indicatorSelect");
+                    const indicatorName = indicatorSelect.options[indicatorSelect.selectedIndex].text;
+                    
+                    const content = `
+                        <div style="font-weight: bold; font-size: 14px; margin-bottom: 5px;">${region}</div>
+                        <div style="font-size: 12px;">
+                            <span style="font-weight: 600;">${indicatorName}:</span> 
+                            <span style="font-weight: 500; color: #8dcaff;">${formattedValue}</span>
+                        </div>
+                        <div style="font-size: 11px; color: #bbb; margin-top: 3px;">
+                            Année: ${year}
+                        </div>
+                    `;
+                    
+                    showTooltip(event, content);
+                    
+                    // Highlight the active region
+                    d3.select(this)
+                        .attr("stroke-width", 2.5)
+                        .attr("stroke", "#FF5733");
                 })
                 .on("mousemove", function (event) {
                     tooltip
-                        .style("left", `${event.pageX + 15}px`)
-                        .style("top", `${event.pageY + 15}px`);
+                        .style("left", (event.pageX + 15) + "px")
+                        .style("top", (event.pageY + 15) + "px");
                 })
                 .on("mouseout", function () {
-                    tooltip.classed("visible", false);
+                    hideTooltip();
+                    
+                    // Reset the highlight
+                    d3.select(this)
+                        .attr("stroke-width", 1.5)
+                        .attr("stroke", "#000");
                 })
                 .on("click", function (event, d) {
                     const region = d.properties.region || d.properties.nom_region;

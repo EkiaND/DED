@@ -177,25 +177,6 @@ li a:hover {
     stroke-width: 1px !important;
 }
 
-/* Styles pour le tooltip */
-#tooltip {
-    position: absolute;
-    background: rgba(0, 0, 0, 0.85);
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    pointer-events: none;
-    font-size: 0.9rem;
-    z-index: 10000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    display: none;
-    transition: opacity 0.2s ease-in-out;
-}
-
-#tooltip.visible {
-    display: block;
-    opacity: 1;
-}
 
 /* Styles pour le formulaire de sélection */
 #controls {

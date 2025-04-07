@@ -19,8 +19,6 @@
                 <canvas id="autreChart"></canvas>
             </div>
         </td>
-    </tr>
-    <tr>
         <td class="graph-cell">
             <div class="graph-container">
                 <canvas id="ratioRegionsCurve"></canvas>
@@ -28,23 +26,32 @@
         </td>
     </tr>
     <tr>
-        <td colspan="2" class="graph-cell">
-            <div id="map-container">
-                <div id="controls">
-                    <label for="indicatorSelect">Indicateur :</label>
-                    <select id="indicatorSelect">
-                        <option value="pib">PIB</option>
-                        <option value="esperance_vie">Espérance de vie</option>
-                        <option value="population">Population</option>
-                    </select>
-                    <label for="yearSelect">Année :</label>
-                    <input type="number" id="yearSelect" value="2018" min="2000" max="2022">
+        <td class="graph-cell">
+            <div class="graph-container">
+                <div id="map-container">
+                    <div id="controls">
+                        <label for="indicatorSelect">Indicateur :</label>
+                        <select id="indicatorSelect">
+                            <option value="pib">PIB</option>
+                            <option value="esperance_vie">Espérance de vie</option>
+                            <option value="population">Population</option>
+                        </select>
+                        <label for="yearSelect">Année :</label>
+                        <input type="number" id="yearSelect" value="2018" min="2000" max="2022">
+                    </div>
+                    <div id="map"></div>
                 </div>
-                <div id="map"></div>
+            </div>
+        </td>
+        <td class="graph-cell">
+            <!-- Cellule vide pour maintenir la symétrie ou pour un futur graphique -->
+            <div class="graph-container">
+                <!-- Vous pouvez ajouter un contenu ici si nécessaire -->
             </div>
         </td>
     </tr>
 </table>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="./public/js/graphiques.js"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
