@@ -119,6 +119,6 @@ function getMoyenneIndicateurParRegion($idIndicateur, $idRegion) {
  *               Retourne un tableau vide en cas d'erreur.
  */
 function getIndicateursParAnnee($annee) {
-    
+    ùobb&acmv ihk acouacuoauvcoacvuyacvuoika cihaciahkc iazhk izhck
 }
 ?>
