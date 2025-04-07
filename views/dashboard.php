@@ -17,7 +17,6 @@
             <div class="graph-container">
                 <div id="map-container">
                     <div id="controls">
-                        <label for="indicatorSelect">Indicateur :</label>
                         <select id="indicatorSelect">
                             <option value="pib">PIB</option>
                             <option value="esperance_vie">Espérance de vie</option>

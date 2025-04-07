@@ -7,7 +7,7 @@ error_reporting(E_ALL);
 // Inclure les modèles nécessaires
 require_once __DIR__ . '/../models/indicateur.php';
 require_once __DIR__ . '/../models/pays.php';
-require_once __DIR__ . '/../models/data.php'; // Inclure le fichier contenant la fonction getDistributionIndicateurParRegion
+require_once __DIR__ . '/../models/data.php';
 
 // Définir le type de contenu comme JSON
 header('Content-Type: application/json');
@@ -27,14 +27,6 @@ if (isset($_GET['action'])) {
         
         case 'getRatioParRegionParAnnee':
             echo json_encode(getRatioParRegionParAnnee());
-            break;
-        
-        case 'getPopulationMondiale':
-            echo json_encode(getPopulationMondiale());
-            break;
-            
-        case 'getAutreIndicateur':
-            echo json_encode(getAutreIndicateur());
             break;
         
         case 'comparerPays':
