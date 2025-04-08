@@ -26,7 +26,7 @@
                             <option value="consommation_electricite">Consommation d'Éléctricité</option>
                             <option value="pib_par_habitant">PIB par habitant</option>
                             <option value="mortalite_infantile">Mortalité infantile</option>
-                            <option value="densite_population">Densité de la population</option>
+                            <option value="densite_population">Densité population</option>
                             <option value="taux_chomage">Taux de chômage</option> 
                         </select>
                         <label for="yearSelect">Année :</label>
