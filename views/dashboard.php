@@ -20,7 +20,14 @@
                         <select id="indicatorSelect">
                             <option value="pib">PIB</option>
                             <option value="esperance_vie">Espérance de vie</option>
-                            <option value="population">Population</option>
+                            <option value="densite_population">Population</option>
+                            <option value="taux_natalite">Taux de natalité</option>
+                            <option value="taux_mortalite">Taux de mortalité</option>
+                            <option value="consommation_electricite">Consommation d'Éléctricité</option>
+                            <option value="pib_par_habitant">PIB par habitant</option>
+                            <option value="mortalite_infantile">Mortalité infantile</option>
+                            <option value="densite_population">Densité de la population</option>
+                            <option value="taux_chomage">Taux de chômage</option> 
                         </select>
                         <label for="yearSelect">Année :</label>
                         <input type="number" id="yearSelect" value="2018" min="2000" max="2022">
@@ -71,3 +78,6 @@
         });
     });
 </script>
+
+
+    
