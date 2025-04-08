@@ -353,5 +353,5 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     });
 
-    updateMap("pib", 2018);
+    updateMap("pib", 2017);
 });

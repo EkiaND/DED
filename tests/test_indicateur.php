@@ -29,16 +29,23 @@ require_once '../models/indicateur.php';
 // Fonction utilitaire pour afficher les résultats de manière lisible
 function afficherResultat($titre, $resultat, $limite = 5) {
     echo "<h2>$titre</h2>";
-    if (empty($resultat)) {
-        echo "<p>Aucun résultat trouvé.</p>";
-    } else {
-        echo "<pre>";
-        // Limiter l'affichage à $limite résultats
-        $affichage = array_slice($resultat, 0, $limite);
-        print_r($affichage);
-        if (count($resultat) > $limite) {
-            echo "\n...et " . (count($resultat) - $limite) . " résultat(s) supplémentaire(s) non affiché(s).";
+    if (is_array($resultat)) {
+        if (empty($resultat)) {
+            echo "<p>Aucun résultat trouvé.</p>";
+        } else {
+            echo "<pre>";
+            // Limiter l'affichage à $limite résultats
+            $affichage = array_slice($resultat, 0, $limite);
+            print_r($affichage);
+            if (count($resultat) > $limite) {
+                echo "\n...et " . (count($resultat) - $limite) . " résultat(s) supplémentaire(s) non affiché(s).";
+            }
+            echo "</pre>";
         }
+    } else {
+        // Gérer les résultats non-array (e.g., float, null, etc.)
+        echo "<pre>";
+        echo "Résultat : " . (is_null($resultat) ? "null" : $resultat) . "\n";
         echo "</pre>";
     }
 }
@@ -54,7 +61,10 @@ afficherResultat("Test de la fonction getValeursIndicateur (Indicateur : $idIndi
 // Tester la fonction getMoyenneIndicateurParRegion
 $idIndicateur = "esperance_vie";
 $idRegion = "1"; // Exemple d'ID de région
-afficherResultat("Test de la fonction getMoyenneIndicateurParRegion (Indicateur : $idIndicateur, Région : $idRegion)", getMoyenneIndicateurParRegion($idIndicateur, $idRegion));
+afficherResultat(
+    "Test de la fonction getMoyenneIndicateurParRegion (Indicateur : $idIndicateur, Région : $idRegion)",
+    getMoyenneIndicateurParRegion($idIndicateur, $idRegion)
+);
 
 // Tester la fonction getIndicateursParAnnee
 $annee = 2020;
