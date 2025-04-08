@@ -4,6 +4,7 @@
             <li><a href="index.php?url=infos_pays">Informations sur les pays</a></li>
             <li><a href="index.php?url=dashboard">Tableau de bord</a></li>
             <li><a href="index.php?url=comparaison_pays">Comparaison des pays</a></li>
+            <li><a href="index.php?url=indicateur_pays">Indicateur d'un pays</a></li>
         </ul>
     </nav>
 
@@ -23,6 +24,9 @@
             break;
         case 'comparaison_pays':
             include 'views/comparaison_pays.php';
+            break;
+        case 'indicateur_pays';
+            include 'views/indicateur_pays.php';
             break;
         default:
             include 'views/dashboard.php';
