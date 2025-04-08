@@ -30,7 +30,7 @@
                             <option value="taux_chomage">Taux de chômage</option> 
                         </select>
                         <label for="yearSelect">Année :</label>
-                        <input type="number" id="yearSelect" value="2018" min="2000" max="2022">
+                        <input type="number" id="yearSelect" value="2008" min="1965" max="2018">
                     </div>
                     <div id="map"></div>
                 </div>
