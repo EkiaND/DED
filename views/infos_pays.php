@@ -8,7 +8,7 @@
         <select id="pays1"></select><br><br>
 
         <label for="indicateur">Veuillez choisir une année : </label><br>
-        <input type="number" value="2000" min="2000" max="2018" style="width: 92%; padding: 8px; margin-bottom: 15px;"><br><br>
+        <input type="number" value="2000" min="1960" max="2018" style="width: 92%; padding: 8px; margin-bottom: 15px;"><br><br>
 
         <br><br>
         <button id="bouton_comparer">Visualisation</button>

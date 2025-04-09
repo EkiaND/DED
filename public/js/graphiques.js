@@ -62,7 +62,8 @@ function creerGraphiqueComparaison(idCanvas, titre, labels, data1, data2, label1
                         text: "Années",
                         color: 'black',
                         font: { size: 14 }
-                    }
+                    },
+                    reverse: true
                 },
                 y: {
                     ticks: { color: 'black' },
@@ -316,27 +317,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "Moyenne de l'Espérance de Vie (en années)",
             "green"
         );
-    }
-
-    if (document.getElementById('populationChart')) {
-        chargerDonnees(
-            'getPopulationMondiale',
-            'populationChart',
-            "Évolution de la Population Mondiale",
-            "Population Mondiale (en milliards)",
-            "red"
-        );
-    }  
-
-    if (document.getElementById('autreChart')) {
-        chargerDonnees(
-            'getAutreIndicateur',
-            'autreChart',
-            "Autre Indicateur",
-            "Valeurs de l'Indicateur",
-            "purple"
-        );
-    }    
+    } 
 
     if (document.getElementById('ratioRegionsCurve')) {
         chargerDonneesMultiplesCourbes(
