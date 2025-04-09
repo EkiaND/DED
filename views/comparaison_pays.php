@@ -4,24 +4,30 @@
 <table id = "graphTable">
   <tr>
     <td rowspan="5">
-        <label for="pays1">Sélectionnez le Pays 1 :</label><br>
-        <select id="pays1"></select><br><br>
+        <label for="pays1">Pays 1 :</label><br>
+        <select id="pays1"><option value="" disabled selected>Choisissez un pays</option></select><br><br>
 
-        <label for="pays2">Sélectionnez le Pays 2 :</label><br>
-        <select id="pays2"></select><br><br>
+        <label for="pays2">Pays 2 :</label><br>
+        <select id="pays2"><option value="" disabled selected>Choisissez un pays</option></select><br><br>
 
-        <label for="indicateur">Sélectionnez un Indicateur :</label><br>
-        <select id="indicateur"></select><br><br>
+        <label for="indicateur">Indicateur :</label><br>
+        <select id="indicateur"><option value="" disabled selected>Choisissez un indicateur</option></select><br><br>
 
         <br><br>
         <button id="bouton_comparer">Comparer</button>
         <div id="erreur"></div>
     </td>
-    <td>Ligne 1 - Colonne 2
-
+    <td class="graph-cell">
+        <div class="kpi-box" id="kpi-pays1">
+            <h3>Pays 1</h3>
+            <p>IDH : <span id="idh-pays1">-</span></p>
+        </div>
     </td>
-    <td>Ligne 1 - Colonne 3
-
+    <td class="graph-cell">
+        <div class="kpi-box" id="kpi-pays2">
+            <h3>Pays 2</h3>
+            <p>IDH : <span id="idh-pays2">-</span></p>
+        </div>
     </td>
   </tr>
   <tr>
