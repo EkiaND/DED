@@ -67,7 +67,7 @@ afficherResultat(
 );
 
 // Tester la fonction getIndicateursParAnnee
-$annee = 2020;
+$annee = 1990;
 afficherResultat("Test de la fonction getIndicateursParAnnee (Année : $annee)", getIndicateursParAnnee($annee));
 
 ?>

@@ -2,10 +2,8 @@
 require_once __DIR__ . '/../models/pays.php';
 require_once __DIR__ . '/../models/indicateur.php';
 
-// Définir le type de contenu comme JSON
 header('Content-Type: application/json');
 
-// Vérifier l'action demandée
 if (isset($_GET['action'])) {
     $action = $_GET['action'];
 
@@ -20,6 +18,15 @@ if (isset($_GET['action'])) {
                 echo json_encode(getPaysParRegion($region));
             } else {
                 echo json_encode(['error' => 'Paramètre "region" manquant']);
+            }
+            exit;
+
+        case 'getDetailsPays':
+            if (isset($_GET['code_pays'])) {
+                $code = $_GET['code_pays'];
+                echo json_encode(getDetailsPays($code));
+            } else {
+                echo json_encode(['error' => 'Paramètre "code_pays" manquant']);
             }
             exit;
 

@@ -24,31 +24,40 @@ if (isset($_GET['action'])) {
         case 'getEsperanceVieMondiale':
             echo json_encode(getEsperanceVieMondiale());
             break;
-        
+
         case 'getRatioParRegionParAnnee':
             echo json_encode(getRatioParRegionParAnnee());
             break;
-        
+
+        case 'getAllGlobalStats': // 
+            $result = [
+                'moyenne_pib_mondial' => getMoyennePIBMondial(),
+                'esperance_vie_mondiale' => getEsperanceVieMondiale(),
+                'ratio_par_region_par_annee' => getRatioParRegionParAnnee()
+            ];
+            echo json_encode($result);
+            break;
+
         case 'comparerPays':
             $pays1 = $_GET['pays1'] ?? null;
             $pays2 = $_GET['pays2'] ?? null;
             $indicateur = $_GET['indicateur'] ?? null;
-        
+
             if (!$pays1 || !$pays2 || !$indicateur || $pays1 === $pays2) {
                 echo json_encode(['error' => 'Paramètres invalides.']);
                 exit;
             }
-            
+
             $valeurs1 = getValeursIndicateur($indicateur, $pays1);
             $valeurs2 = getValeursIndicateur($indicateur, $pays2);
-            
+
             $annees = array_map(fn($v) => $v['annee'], $valeurs1);
             $valeursPays1 = array_map(fn($v) => $v['valeur'], $valeurs1);
             $valeursPays2 = array_map(fn($v) => $v['valeur'], $valeurs2);
-            
+
             $details1 = getDetailsPays($pays1);
             $details2 = getDetailsPays($pays2);
-            
+
             echo json_encode([
                 'indicateur' => $indicateur,
                 'nomPays1' => $details1['nom_pays'] ?? $pays1,
@@ -83,68 +92,107 @@ if (isset($_GET['action'])) {
             }
             break;
 
-        case 'getCountryData':
-            if (isset($_GET['codePays'])) {
-                $codePays = $_GET['codePays'];
-                echo json_encode(getCountryData($codePays));
-            } else {
-                echo json_encode(['error' => 'Paramètre codePays manquant']);
-            }
+            case 'getCountryData':
+                if (isset($_GET['codePays'])) {
+                    $codePays = $_GET['codePays'];
+                    echo json_encode(getCountryData($codePays));
+                } else {
+                    echo json_encode(['error' => 'Paramètre codePays manquant']);
+                }
             break;
 
-        default:
-            echo json_encode(['error' => 'Action non reconnue']);
+            case 'getIndicateurs':
+                echo json_encode(getIndicateurs());
+                break;
+    
+            case 'getValeursIndicateur':
+                if (isset($_GET['indicateur'], $_GET['code_pays'])) {
+                    $indicateur = $_GET['indicateur'];
+                    $codePays = $_GET['code_pays'];
+                    echo json_encode(getValeursIndicateur($indicateur, $codePays));
+                } else {
+                    echo json_encode(['error' => 'Paramètres manquants']);
+                }
+                break;
+    
+            case 'getMoyenneIndicateurParRegion':
+                if (isset($_GET['indicateur'], $_GET['region'])) {
+                    $indicateur = $_GET['indicateur'];
+                    $region = $_GET['region'];
+                    echo json_encode(getMoyenneIndicateurParRegion($indicateur, $region));
+                } else {
+                    echo json_encode(['error' => 'Paramètres manquants']);
+                }
+                break;
+    
+            case 'getIndicateursParAnnee':
+                if (isset($_GET['annee'])) {
+                    $annee = (int)$_GET['annee'];
+                    echo json_encode(getIndicateursParAnnee($annee));
+                } else {
+                    echo json_encode(['error' => 'Paramètre année manquant']);
+                }
+                break;
+            
+            case 'getIndicateursParAnneePays':
+                    if (isset($_GET['annee']) && isset($_GET['code_pays'])) {
+                        $annee = (int)$_GET['annee'];
+                        $codePays = $_GET['code_pays'];
+                        echo json_encode(getIndicateursParAnneePays($annee, $codePays));
+                    } else {
+                        echo json_encode(['error' => 'Paramètres année ou code pays manquants']);
+                    }
             break;
-    }
-    exit;
+    
+            default:
+                echo json_encode(['error' => 'Action inconnue']);
+                break;
+        }
+        exit;
 }
 
 // Si aucune action n'est spécifiée, retourner une erreur
 echo json_encode(['error' => 'Aucune action spécifiée']);
 exit;
 
-// Fonction pour récupérer la moyenne du PIB mondial par année
+
+// ----------------------------------
+// FONCTIONS DE CALCUL
+// ----------------------------------
+
 function getMoyennePIBMondial() {
     $pays = getPays();
     $pibParAnnee = [];
 
-    // Vérifier si les pays ont été récupérés correctement
     if ($pays === null || !is_array($pays)) {
         return ['error' => 'Aucun pays trouvé ou erreur de récupération des pays.'];
     }
 
-    // Parcourir chaque pays pour récupérer les valeurs du PIB
     foreach ($pays as $paysInfo) {
         $codePays = $paysInfo['code_pays'];
         $valeurs = getValeursIndicateur('pib', $codePays);
 
-        // Ignorer les pays sans données valides
         if ($valeurs === null || empty($valeurs)) {
             continue;
         }
 
-        // Regrouper les données par année
         foreach ($valeurs as $data) {
             $annee = $data['annee'];
             $pib = $data['valeur'];
 
-            // Ignorer les valeurs invalides
             if (is_null($pib) || $pib <= 0) {
                 continue;
             }
 
-            // Initialiser l'année si elle n'existe pas encore
             if (!isset($pibParAnnee[$annee])) {
                 $pibParAnnee[$annee] = ['total' => 0, 'nb_pays' => 0];
             }
 
-            // Ajouter les données pour l'année
             $pibParAnnee[$annee]['total'] += $pib;
             $pibParAnnee[$annee]['nb_pays']++;
         }
     }
 
-    // Calculer la moyenne du PIB par année
     $moyennePIB = [];
     foreach ($pibParAnnee as $annee => $data) {
         if ($data['nb_pays'] > 0) {
@@ -155,48 +203,39 @@ function getMoyennePIBMondial() {
     return $moyennePIB;
 }
 
-// Fonction pour récupérer l'espérance de vie mondiale par année
 function getEsperanceVieMondiale() {
     $pays = getPays();
     $esperanceParAnnee = [];
 
-    // Vérifier si les pays ont été récupérés correctement
     if ($pays === null || !is_array($pays)) {
         return ['error' => 'Aucun pays trouvé ou erreur de récupération des pays.'];
     }
 
-    // Parcourir chaque pays pour récupérer les valeurs de l'espérance de vie
     foreach ($pays as $paysInfo) {
         $codePays = $paysInfo['code_pays'];
         $valeurs = getValeursIndicateur('esperance_vie', $codePays);
 
-        // Ignorer les pays sans données valides
         if ($valeurs === null || empty($valeurs)) {
             continue;
         }
 
-        // Regrouper les données par année
         foreach ($valeurs as $data) {
             $annee = $data['annee'];
             $esperance = $data['valeur'];
 
-            // Ignorer les valeurs invalides
             if (is_null($esperance) || $esperance <= 0) {
                 continue;
             }
 
-            // Initialiser l'année si elle n'existe pas encore
             if (!isset($esperanceParAnnee[$annee])) {
                 $esperanceParAnnee[$annee] = ['total' => 0, 'nb_pays' => 0];
             }
 
-            // Ajouter les données pour l'année
             $esperanceParAnnee[$annee]['total'] += $esperance;
             $esperanceParAnnee[$annee]['nb_pays']++;
         }
     }
 
-    // Calculer la moyenne de l'espérance de vie par année
     $moyenneEsperance = [];
     foreach ($esperanceParAnnee as $annee => $data) {
         if ($data['nb_pays'] > 0) {
@@ -206,6 +245,7 @@ function getEsperanceVieMondiale() {
 
     return $moyenneEsperance;
 }
+
 function getRatioParRegionParAnnee() {
     $conn = getBDD();
     $pays = getPays();
@@ -217,15 +257,12 @@ function getRatioParRegionParAnnee() {
 
     foreach ($pays as $paysInfo) {
         $codePays = $paysInfo['code_pays'];
-
-        
         $details = getDetailsPays($codePays);
         if ($details === null || !isset($details['nom_region'])) {
             continue;
         }
 
         $region = $details['nom_region'];
-
         $valeursNatalite = getValeursIndicateur('taux_natalite', $codePays);
         $valeursMortalite = getValeursIndicateur('taux_mortalite', $codePays);
 
@@ -251,7 +288,6 @@ function getRatioParRegionParAnnee() {
         }
     }
 
-    // Moyenne par région et année
     $resultat = [];
     foreach ($dataParRegionAnnee as $region => $annees) {
         foreach ($annees as $annee => $data) {
@@ -263,4 +299,3 @@ function getRatioParRegionParAnnee() {
 
     return $resultat;
 }
-

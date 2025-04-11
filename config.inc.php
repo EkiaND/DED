@@ -27,8 +27,8 @@
  function getBDD() {
     $db_host = "localhost";
     $db_name = "economie_mondiale";
-    $db_user = "root";
-    $db_pass = "";
+    $db_user = "root"; 
+    $db_pass = ""; // sur mac OS, doit normalement etre renseigné
 
     // Activer le mode d'exception pour mysqli
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);

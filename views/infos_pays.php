@@ -1,80 +1,69 @@
-<?php
-// Vue pour les parties A et B
-?>
-<table id = "graphTable">
-  <tr>
-    <td rowspan="5">
-        <label for="pays1">Sélectionnez un Pays:</label><br>
-        <select id="pays1"></select><br><br>
+<?php // Vue pour les parties A et B ?>
+        <table id="graphTable" >
+          <tr>
+            <td rowspan="5" style="padding: 20px;">
+                <label for="pays1">Sélectionnez un Pays :</label><br>
+                <select id="pays1" required>
+                    <option>Veuillez sélectionner un pays</option>
+                </select>
+                
+                <label for="annee">Veuillez choisir une année : </label><br>
+                <input id="annee" type="number" value="2000" min="1960" max="2018" style="width: 92%; padding: 8px; margin-bottom: 15px;"><br><br>
 
-        <label for="indicateur">Veuillez choisir une année : </label><br>
-        <input type="number" value="2000" min="1960" max="2018" style="width: 92%; padding: 8px; margin-bottom: 15px;"><br><br>
+                <label for="test">La liste des indicateurs :</label><br>
+                <select id="test">
+                    <option value="pib" selected>PIB</option>
+                    <option value="esperance_vie">Espérance de vie</option>
+                    <option value="densite_population">Population</option>
+                    <option value="taux_natalite">Taux de natalité</option>
+                    <option value="taux_mortalite">Taux de mortalité</option>
+                    <option value="consommation_electricite">Consommation d'Électricité</option>
+                    <option value="pib_par_habitant">PIB par habitant</option>
+                    <option value="mortalite_infantile">Mortalité infantile</option>
+                    <option value="taux_chomage">Taux de chômage</option> 
+                </select>
 
-        <br><br>
-        <button id="bouton_comparer">Visualisation</button>
-        <div id="erreur"></div>
-    </td>
-  
-</tr>   
+                <br><br>
+                <div id="erreur" style="color:red;"></div>
+            </td>
+          </tr> 
 
-  <tr>
-  <td rowspan1="2" style="padding: 80px; background-color: #ffffff; border-radius:5px;">
-          graphiques</td>
+          <tr>
+            <td rowspan="1" style="padding: 50px; background-color: #ffffff; border-radius:5px;">
+              <div id = "infoPays">
+                <p style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 20px;">
+                  Le pays sélectionné est <span style="color: #4e8ef7;">BourseTrack</span>, sa région est : <span style="color: #4e8ef7;">NomDeLaRégion</span> .<br><br>
+                  Ci-dessous se trouvent l’ensemble de ses informations ainsi que ses indicateurs.
+                </p>
+                
+                <!-- Premier tableau avec les intitulés des indicateurs -->
 
-    <td rowspan="1" style="padding: 80px; background-color: #ffffff; border-radius:5px ;">
-      
-    graphiques
-    </td>
+                <!-- Deuxième tableau avec les données réelles -->
+                <table style="width: 100%; height: 100%; margin-top: 30px; border-collapse: collapse; border: 1px solid #3366CC; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                  <tbody>
+                    <tr> 
+                      <td>     </td>  <!-- PIB -->
+                      <td></td>  <!-- PIB/Habitants -->
+                      <td><span></span></td>  <!-- Taux de mortalité / natalité -->
+                      <td><span></span></td>  <!-- Utilisation d'internet -->
+                      <td><span></span></td>  <!-- Taux de chômage -->
+                      <td><span></span></td>  <!-- Espérance de vie -->
+                      <td></td>  <!-- Mortalité infantile -->
+                      <td></td>  <!-- Densité de population -->
+                      <td></td>  <!-- Consommation d’électricité -->
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
 
-</tr>
-
-<tr>
-  <td colspan="2" style="padding: 50px; background-color: #ffffff; border-radius:5px ;">
-      <div>
-
-        <table style="width: 100%; margin-top: 30px; border-collapse: collapse; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-          <thead>
-            <tr style="background-color: #4e8ef7; color: white;">
-              <th style="padding: 12px;">Test</th>
-              <th style="padding: 12px;">Test</th>
-              <th style="padding: 12px;">test</th>
-              <th style="padding: 12px;">État</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="text-align: center;">
-              <td style="padding: 12px;">BourseTrack</td>
-              <td style="padding: 12px;">Aminata</td>
-              <td style="padding: 12px;">19/12/2024</td>
-              <td style="padding: 12px;">
-                <span style="background-color: #2ecc71; color: white; padding: 5px 10px; border-radius: 20px; font-weight: bold;">Terminé</span>
-              </td>
-            </tr>
-            <tr style="text-align: center;">
-              <td style="padding: 12px;">Analyse Élections EU</td>
-              <td style="padding: 12px;">Léo</td>
-              <td style="padding: 12px;">06/01/2025</td>
-              <td style="padding: 12px;">
-                <span style="background-color: #f39c12; color: white; padding: 5px 10px; border-radius: 20px; font-weight: bold;">En cours</span>
-              </td>
-            </tr>
-            <tr style="text-align: center;">
-              <td style="padding: 12px;">Visualisation Data Géo</td>
-              <td style="padding: 12px;">Sophie</td>
-              <td style="padding: 12px;">30/04/2025</td>
-              <td style="padding: 12px;">
-                <span style="background-color: #e74c3c; color: white; padding: 5px 10px; border-radius: 20px; font-weight: bold;">En retard</span>
-              </td>
-            </tr>
-          </tbody>
+          <tr>
+            <td colspan="1" style="background-color: #ffffff; border-radius:5px;">
+              <canvas id="graphPIB"></canvas>
+            </td>
+          </tr>
         </table>
-      </div>
-    </td>
-  </tr>
-
-</table>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="./public/js/graphiques.js"></script>
-<script src="./public/js/interactions.js"></script>
-
+<script src="/public/js/interaction_info.js"></script>
