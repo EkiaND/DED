@@ -77,11 +77,6 @@ function getIndicesParRegionEtAnnee($idRegion, $annee) {
     }
 }
 
-<<<<<<< Updated upstream
-
-
-
-
 /**
  * Récupérer les indices de développement pour une région donnée et une année.
  *
@@ -104,7 +99,8 @@ function getDernierIdhParPays($codePays) {
     $res = mysqli_stmt_get_result($stmt);
     
     return mysqli_fetch_assoc($res) ?: null;
-=======
+}
+
 /**
  * Récupérer les indices de développement pour un pays donné.
  *
@@ -257,6 +253,5 @@ function getTopPaysParIndice($indice, $annee, $ordre = 'DESC') {
         logError($e->getMessage(), __FILE__, __LINE__);
         return [];
     }
->>>>>>> Stashed changes
 }
 ?>
