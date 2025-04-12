@@ -205,7 +205,6 @@ li a:hover {
     stroke-width: 1px !important;
 }
 
-
 /* Styles pour le formulaire de sélection */
 #controls {
     display: flex;
@@ -299,7 +298,6 @@ li a:hover {
     font-size: 13px;
 }
 
-
 /* Style pour les boutons selections */
 #graphTable td[rowspan="5"] {
     padding: 20px;
@@ -363,6 +361,76 @@ li a:hover {
     font-size: 13px;
 }
 
+/* Styles pour le tableau des indicateurs */
+#infoPays table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#infoPays table thead {
+    background-color: #4e8ef7;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+#infoPays table th,
+#infoPays table td {
+    padding: 15px;
+    text-align: center;
+    font-size: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+#infoPays table th {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#infoPays table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#infoPays table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+#infoPays table td {
+    color: #333;
+    font-weight: 500;
+}
+
+#infoPays table td[data-label]::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: none;
+    margin-right: 10px;
+    color: #4e8ef7;
+}
+
+/* Responsive design pour le tableau */
+@media (max-width: 768px) {
+    #infoPays table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    #infoPays table th,
+    #infoPays table td {
+        text-align: left;
+        padding: 10px;
+    }
+
+    #infoPays table td[data-label]::before {
+        display: inline-block;
+    }
+}
 
 /* Style pour le footer */
 footer {
@@ -422,6 +490,19 @@ footer a:hover {
     text-decoration: underline;
 }
 
+/* Animation pour l'image du footer */
+.footer-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.footer-logo:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 10px #4e8ef7);
+}
+
 /* Style pour le bouton retour */
 #backButton {
     position: absolute;
@@ -442,6 +523,20 @@ footer a:hover {
     background-color: #0056b3;
 }
 
+/* Style pour les valeurs indisponibles */
+.valeur-indisponible {
+    color: red;
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* Style pour les cellules contenant des valeurs indisponibles */
+.cell-indisponible {
+    color: red !important;
+    font-weight: bold !important;
+    font-style: italic !important;
+    background-color: #ffe6e6 !important; /* Optionnel : fond rouge clair pour plus de visibilité */
+}
 
 @keyframes fadeIn {
     from {
