@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
         'densite_population': 'Population',
         'taux_natalite': 'Taux de Natalité',
         'taux_mortalite': 'Taux de Mortalité',
+        'utilisation_internet': 'Utilisation d\'Internet',
         'consommation_electricite': 'Consommation d\'Électricité',
         'pib_par_habitant': 'PIB par Habitant',
         'mortalite_infantile': 'Mortalité Infantile',
