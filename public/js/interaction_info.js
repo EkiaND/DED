@@ -37,81 +37,66 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
     function mettreAJourIndicateursTable(codePays, annee) {
-  if (!codePays || !annee) return;
-
-  const url = `./controllers/indicateurs.php?action=getIndicateursParAnneePays&annee=${annee}&code_pays=${codePays}`;
-  console.log(`Récupération des données pour le pays ${codePays} en ${annee}`);
-
-  fetch(url)
-    .then(response => {
-      if (!response.ok) throw new Error(`Erreur HTTP : ${response.status}`);
-      return response.json();
-    })
-    .then(data => {
-      console.log("Données reçues :", data);
-
-      const dataRow = document.querySelector("#infoPays table tbody tr");
-      if (!dataRow) return console.warn("Ligne de données non trouvée");
-
-      const formatValue = (label, value, suffix = "") => {
-        if (value === "NA") {
-          return `<div style="text-align: center;">${label} : <span style="color: red;">Indisponible</span></div>`;
-        } else {
-          return `<div style="text-align: center;">${label} : ${value}${suffix}</div>`;
-        }
-      };
-
-      const countryData = Array.isArray(data) ? data[0] : data;
-      if (!countryData) return console.warn("Données pays non trouvées", data);
-
-      if (dataRow.cells[0]) dataRow.cells[0].innerHTML = formatValue("PIB", countryData.pib || "NA");
-      if (dataRow.cells[1]) dataRow.cells[1].innerHTML = formatValue("PIB par habitant", countryData.pib_par_habitant || "NA");
-
-      if (dataRow.cells[2]) {
-        const mort = countryData.taux_mortalite || "NA";
-        const nat = countryData.taux_natalite || "NA";
-
-        if (mort === "NA" && nat === "NA") {
-          dataRow.cells[2].innerHTML = `<div style="text-align: center;"><span style="color: red;">Mortalité / Natalité : Indisponible</span></div>`;
-        } else {
-          const mortAff = mort === "NA" ? `<span style="color: red;">Indisponible</span>` : mort;
-          const natAff = nat === "NA" ? `<span style="color: red;">Indisponible</span>` : nat;
-          dataRow.cells[2].innerHTML = `<div style="text-align: center;">Mortalité / Natalité : ${mortAff} / ${natAff}</div>`;
-        }
-      }
-
-      if (dataRow.cells[3]) {
-        const span = dataRow.cells[3].querySelector("span");
-        const val = formatValue("Utilisation internet", countryData.utilisation_internet || "NA");
-        span ? (span.innerHTML = val) : (dataRow.cells[3].innerHTML = val);
-      }
-
-      if (dataRow.cells[4]) {
-        const span = dataRow.cells[4].querySelector("span");
-        const val = formatValue("Taux de chômage", countryData.taux_chomage || "NA", "%");
-        span ? (span.innerHTML = val) : (dataRow.cells[4].innerHTML = val);
-      }
-
-      if (dataRow.cells[5]) {
-        const span = dataRow.cells[5].querySelector("span");
-        const val = formatValue("Espérance de vie", countryData.esperance_vie || "NA", " ans");
-        span ? (span.innerHTML = val) : (dataRow.cells[5].innerHTML = val);
-      }
-
-      if (dataRow.cells[6]) dataRow.cells[6].innerHTML = formatValue("Mortalité infantile", countryData.mortalite_infantile || "NA");
-      if (dataRow.cells[7]) dataRow.cells[7].innerHTML = formatValue("Densité de population", countryData.densite_population || "NA", " hab/km²");
-      if (dataRow.cells[8]) dataRow.cells[8].innerHTML = formatValue("Consommation électricité", countryData.consommation_electricite || "NA");
-
-      console.log("Tableau mis à jour !");
-    })
-    .catch(error => {
-      console.error("Erreur lors de la récupération :", error);
-      const erreurDiv = document.getElementById("erreur");
-      if (erreurDiv) erreurDiv.textContent = "Impossible de récupérer les informations du pays.";
-      resetTable();
-    });
-}
-
+      if (!codePays || !annee) return;
+  
+      const url = `./controllers/indicateurs.php?action=getIndicateursParAnneePays&annee=${annee}&code_pays=${codePays}`;
+      console.log(`Récupération des données pour le pays ${codePays} en ${annee}`);
+  
+      fetch(url)
+        .then(response => {
+          if (!response.ok) throw new Error(`Erreur HTTP : ${response.status}`);
+          return response.json();
+        })
+        .then(data => {
+          console.log("Données reçues :", data);
+  
+          const dataRow = document.querySelector("#infoPays table tbody tr");
+          if (!dataRow) return console.warn("Ligne de données non trouvée");
+  
+          const formatNumber = (value, decimals = 2, cell) => {
+            if (isNaN(value) || value === "NA") {
+              cell.classList.add("cell-indisponible");
+              return "Indisponible";
+            }
+            cell.classList.remove("cell-indisponible");
+            return parseFloat(value).toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+          };
+  
+          const countryData = Array.isArray(data) ? data[0] : data;
+          if (!countryData) return console.warn("Données pays non trouvées", data);
+  
+          if (dataRow.cells[0]) dataRow.cells[0].innerHTML = `${formatNumber(countryData.pib, 0, dataRow.cells[0])}${countryData.pib !== "NA" ? "&nbsp;$" : ""}`;
+          if (dataRow.cells[1]) dataRow.cells[1].innerHTML = `${formatNumber(countryData.pib_par_habitant, 2, dataRow.cells[1])}${countryData.pib_par_habitant !== "NA" ? "&nbsp;$" : ""}`;
+          
+          if (dataRow.cells[2]) {
+            const mort = parseFloat(countryData.taux_mortalite);
+            const nat = parseFloat(countryData.taux_natalite);
+            if (isNaN(mort) || isNaN(nat) || mort === "NA" || nat === "NA") {
+              dataRow.cells[2].classList.add("cell-indisponible");
+              dataRow.cells[2].innerHTML = "Indisponible";
+            } else {
+              const ratio = (mort / nat).toFixed(2);
+              dataRow.cells[2].classList.remove("cell-indisponible");
+              dataRow.cells[2].innerHTML = `${ratio}`;
+            }
+          }
+  
+          if (dataRow.cells[3]) dataRow.cells[3].innerHTML = `${formatNumber(countryData.utilisation_internet, 2, dataRow.cells[3])}${countryData.utilisation_internet !== "NA" ? "&nbsp;%" : ""}`;
+          if (dataRow.cells[4]) dataRow.cells[4].innerHTML = `${formatNumber(countryData.taux_chomage, 2, dataRow.cells[4])}${countryData.taux_chomage !== "NA" ? "&nbsp;%" : ""}`;
+          if (dataRow.cells[5]) dataRow.cells[5].innerHTML = `${formatNumber(countryData.esperance_vie, 2, dataRow.cells[5])}${countryData.esperance_vie !== "NA" ? "&nbsp;ans" : ""}`;
+          if (dataRow.cells[6]) dataRow.cells[6].innerHTML = `${formatNumber(countryData.mortalite_infantile, 2, dataRow.cells[6])}${countryData.mortalite_infantile !== "NA" ? "&nbsp;‰" : ""}`;
+          if (dataRow.cells[7]) dataRow.cells[7].innerHTML = `${formatNumber(countryData.densite_population, 2, dataRow.cells[7])}${countryData.densite_population !== "NA" ? "&nbsp;hab/km²" : ""}`;
+          if (dataRow.cells[8]) dataRow.cells[8].innerHTML = `${formatNumber(countryData.consommation_electricite, 2, dataRow.cells[8])}${countryData.consommation_electricite !== "NA" ? "&nbsp;kWh" : ""}`;
+  
+          console.log("Tableau mis à jour !");
+        })
+        .catch(error => {
+          console.error("Erreur lors de la récupération :", error);
+          const erreurDiv = document.getElementById("erreur");
+          if (erreurDiv) erreurDiv.textContent = "Impossible de récupérer les informations du pays.";
+          resetTable();
+        });
+    }
   
     async function mettreAJourInfosPays(codePays, annee) {
       await afficherDetailsPays(codePays);
@@ -123,28 +108,35 @@ document.addEventListener("DOMContentLoaded", function () {
       if (graphique) graphique.destroy();
   
       graphique = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: titre,
-            data: data,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderWidth: 1,
-            fill: true,
-            tension: 0.3
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            x: { title: { display: true, text: "Année" } },
-            y: { beginAtZero: false, title: { display: true, text: "Évolution de l'indicateur" } }
+          type: 'line',
+          data: {
+              labels: labels,
+              datasets: [{
+                  label: titre,
+                  data: data,
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  borderWidth: 1,
+                  fill: true,
+                  tension: 0.3
+              }]
+          },
+          options: {
+              responsive: true,
+              scales: {
+                  x: { 
+                      title: { display: true, text: "Année" },
+                      ticks: { reverse: true } // Inverse l'axe x
+                  },
+                  y: { 
+                      beginAtZero: false, 
+                      title: { display: true, text: "Évolution de l'indicateur" } 
+                  }
+              }
           }
-        }
       });
-    }
+  }
+  
   
     function chargerDonneesEtAfficherGraphiques() {
       const pays = document.getElementById("pays1").value;
@@ -181,13 +173,19 @@ document.addEventListener("DOMContentLoaded", function () {
               valeurs.push(parseFloat(item.valeur));
             }
           });
+
+          // Trier les années et les valeurs associées dans l'ordre croissant
+          const sortedData = annees.map((year, index) => ({ year, value: valeurs[index] }))
+                                   .sort((a, b) => a.year - b.year);
+          const sortedAnnees = sortedData.map(item => item.year);
+          const sortedValeurs = sortedData.map(item => item.value);
   
-          if (annees.length === 0) {
+          if (sortedAnnees.length === 0) {
             erreurDiv.textContent = `Aucune donnée disponible entre ${annee} et 2018.`;
             return;
           }
   
-          creerGraphiqueIndicateur('graphPIB', `Évolution - ${indicateur} - entre ${annee} et 2018`, annees, valeurs);
+          creerGraphiqueIndicateur('graphPIB', `Évolution - ${indicateur} - entre ${annee} et 2018`, sortedAnnees, sortedValeurs);
         })
         .catch(err => {
           console.error("Erreur lors de la récupération des données graphiques :", err);
@@ -231,4 +229,3 @@ document.addEventListener("DOMContentLoaded", function () {
     chargerListesPays();
     setTimeout(chargerDonneesEtAfficherGraphiques, 1000);
   });
-  
