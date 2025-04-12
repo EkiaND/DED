@@ -76,4 +76,32 @@ function getIndicesParRegionEtAnnee($idRegion, $annee) {
         return [];
     }
 }
+
+
+
+
+
+/**
+ * Récupérer les indices de développement pour une région donnée et une année.
+ *
+ * @param string $codePays code du Pays.
+ * @return array IDH le plus récent disponible pour le pays.
+ */
+function getDernierIdhParPays($codePays) {
+    $conn = getBDD();
+    
+    $stmt = mysqli_prepare($conn, "
+        SELECT annee, idh 
+        FROM indices_dvpt 
+        WHERE code_pays = ? AND idh IS NOT NULL  AND genre = 'total'
+        ORDER BY annee DESC 
+        LIMIT 1
+    ");
+    
+    mysqli_stmt_bind_param($stmt, "s", $codePays);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    
+    return mysqli_fetch_assoc($res) ?: null;
+}
 ?>
