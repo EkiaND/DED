@@ -38,7 +38,7 @@ def get_pays_et_regions():
         conn = pymysql.connect(
             host="localhost",
             user="root",
-            password="",  # Remplacez par votre mot de passe
+            password="",
             database="economie_mondiale"
         )
         cursor = conn.cursor(pymysql.cursors.DictCursor)
@@ -86,7 +86,7 @@ def regrouper_par_regions(input_geojson, output_geojson):
                 "type": "Feature",
                 "properties": {
                     "region": nom_region,
-                    "countries": data["countries"]  # Inclure la liste des pays
+                    "countries": data["countries"]
                 },
                 "geometry": json.loads(gpd.GeoSeries([combined_geometry]).to_json())["features"][0]["geometry"]
             })

@@ -1,4 +1,33 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Mapping des noms des indicateurs
+    const mappingIndicateurs = {
+        'pib': 'PIB',
+        'esperance_vie': 'Espérance de Vie',
+        'densite_population': 'Population',
+        'taux_natalite': 'Taux de Natalité',
+        'taux_mortalite': 'Taux de Mortalité',
+        'utilisation_internet': 'Utilisation d\'Internet',
+        'consommation_electricite': 'Consommation d\'Électricité',
+        'pib_par_habitant': 'PIB par Habitant',
+        'mortalite_infantile': 'Mortalité Infantile',
+        'taux_chomage': 'Taux de Chômage'
+    };
+
+    // Reverse mapping pour retrouver la clé à partir de la valeur formatée
+    const reverseMappingIndicateurs = Object.fromEntries(
+        Object.entries(mappingIndicateurs).map(([key, value]) => [value, key])
+    );
+
+    // Fonction pour formater les noms des indicateurs
+    function formaterNomIndicateur(nom) {
+        return mappingIndicateurs[nom] || nom; // Utilise le mapping ou retourne le nom original si non trouvé
+    }
+
+    // Fonction pour retrouver la clé d'un indicateur à partir de son nom formaté
+    function retrouverCleIndicateur(nomFormate) {
+        return reverseMappingIndicateurs[nomFormate] || nomFormate; // Utilise le reverse mapping ou retourne le nom formaté si non trouvé
+    }
+
     // Fonction générique pour remplir un select à partir d'une API
     function chargerSelect(idSelect, url, labelKey, valueKey) {
         fetch(url)
@@ -15,8 +44,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     return;
                 }
 
+                select.innerHTML = ''; // Réinitialise les options du select
                 data.forEach(item => {
-                    const option = new Option(item[labelKey], item[valueKey]);
+                    const label = idSelect === 'indicateur' ? formaterNomIndicateur(item[labelKey]) : item[labelKey];
+                    const option = new Option(label, item[valueKey]);
                     select.add(option);
                 });
             })
@@ -44,7 +75,8 @@ document.addEventListener("DOMContentLoaded", function () {
         btn.addEventListener("click", function () {
             const pays1 = document.getElementById("pays1").value;
             const pays2 = document.getElementById("pays2").value;
-            const indicateur = document.getElementById("indicateur").value;
+            const indicateurFormate = document.getElementById("indicateur").value;
+            const indicateur = retrouverCleIndicateur(indicateurFormate); // Retrouve la clé réelle de l'indicateur
             const erreurDiv = document.getElementById("erreur");
 
             erreurDiv.textContent = "";
@@ -59,6 +91,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+
+            Promise.all([
+                fetch(`/DED/controllers/indicateurs.php?action=getIdhParPays&code=${pays1}`).then(r => r.json()),
+                fetch(`/DED/controllers/indicateurs.php?action=getIdhParPays&code=${pays2}`).then(r => r.json())
+            ])
+            .then(([idh1, idh2]) => {
+                const idhEl1 = document.getElementById("idh-pays1");
+                const idhEl2 = document.getElementById("idh-pays2");
+                idhEl1.textContent = idh1?.idh ? Number(idh1.idh).toFixed(3) : "N/A";
+                idhEl2.textContent = idh2?.idh ? Number(idh2.idh).toFixed(3) : "N/A";
+            });
+
             fetch(`/DED/controllers/indicateurs.php?action=comparerPays&pays1=${pays1}&pays2=${pays2}&indicateur=${indicateur}`)
                 .then(response => response.json())
                 .then(data => {
@@ -67,10 +111,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         return;
                     }
 
-                    // Appel à la fonction du graphique (à définir dans graphiques.js)
+                    // Appel à la fonction du graphique avec le nom formaté
                     creerGraphiqueComparaison(
                         'comparaisonChart',
-                        `Évolution de ${data.indicateur} pour ${data.nomPays1} et ${data.nomPays2}`,
+                        `Évolution de ${formaterNomIndicateur(data.indicateur)} pour ${data.nomPays1} et ${data.nomPays2}`,
                         data.annees,
                         data.valeurs1,
                         data.valeurs2,

@@ -8,6 +8,7 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/../models/indicateur.php';
 require_once __DIR__ . '/../models/pays.php';
 require_once __DIR__ . '/../models/data.php';
+require_once __DIR__ . '/../models/indices.php';
 
 // Définir le type de contenu comme JSON
 header('Content-Type: application/json');
@@ -37,6 +38,16 @@ if (isset($_GET['action'])) {
             ];
             echo json_encode($result);
             break;
+
+        case 'getIdhParPays':
+            if (isset($_GET['code'])) {
+                $code = $_GET['code'];
+                $idhData = getDernierIdhParPays($code); // Appel à ta fonction du modèle
+                echo json_encode($idhData ?: ["idh" => null]);
+            } else {
+                echo json_encode(["error" => "Code pays manquant"]);
+            }
+            exit;
 
         case 'comparerPays':
             $pays1 = $_GET['pays1'] ?? null;

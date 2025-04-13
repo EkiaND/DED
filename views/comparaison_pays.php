@@ -17,13 +17,13 @@
         <button id="bouton_comparer">Comparer</button>
         <div id="erreur"></div>
     </td>
-    <td class="graph-cell">
+    <td>
         <div class="kpi-box" id="kpi-pays1">
             <h3>Pays 1</h3>
             <p>IDH : <span id="idh-pays1">-</span></p>
         </div>
     </td>
-    <td class="graph-cell">
+    <td>
         <div class="kpi-box" id="kpi-pays2">
             <h3>Pays 2</h3>
             <p>IDH : <span id="idh-pays2">-</span></p>
