@@ -379,52 +379,55 @@ function getCountryData($codePays) {
     }
 }
 
-
-
 /**
- * Récupère le top 5 des pays ayant le plus haut PIB par région pour une année donnée.
+ * Récupère le top 5 des pays ayant le plus haut PIB moyen par région entre 1960 et 2018.
  *
- * Cette fonction interroge la base de données pour obtenir les données de PIB (indicateur `NY.GDP.MKTP.CD`)
- * issues de la table `indicateur`, jointes aux informations des pays (`pays`) et des régions (`region`).
- * Elle retourne les 5 pays ayant le plus haut PIB pour chaque région, regroupés dans un tableau associatif.
- *
- * @param int $annee Année pour laquelle on souhaite récupérer les données du PIB.
  * @return array Tableau associatif contenant les régions comme clés et pour chaque région,
- *               un tableau de 5 pays avec leur nom et la valeur de leur PIB.
+ *               un tableau de 5 pays avec leur nom et la valeur moyenne de leur PIB.
  *               En cas d'erreur, retourne un tableau avec la clé 'error' et le message d’erreur.
  */
-function getTop5PIBParRegion($annee) {
-    require_once('config.php'); // Connexion à la base via PDO
-
-    // ID de l’indicateur du PIB (Produit Intérieur Brut, en dollars constants US)
-    $id_indicateur_pib = 'NY.GDP.MKTP.CD';
-
-    // Requête SQL pour obtenir le PIB des pays par région
-    $sql = "
-        SELECT 
-            r.nom_region,
-            p.nom_pays,
-            i.valeur
-        FROM indicateur i
-        JOIN pays p ON i.code_pays = p.code_pays
-        JOIN region r ON p.id_region = r.id_region
-        WHERE i.id_indicateur = :id_indicateur
-          AND i.annee = :annee
-          AND i.valeur IS NOT NULL
-        ORDER BY r.nom_region, i.valeur DESC
-    ";
-
+function getTop5PIBParRegion() {
     try {
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':id_indicateur', $id_indicateur_pib, PDO::PARAM_STR);
-        $stmt->bindValue(':annee', $annee, PDO::PARAM_INT);
-        $stmt->execute();
+        $conn = getBDD();
+        $query = "
+            SELECT 
+                r.nom_region,
+                p.nom_pays,
+                AVG(i.pib) AS moyenne_pib
+            FROM indicateurs i
+            JOIN pays p ON i.code_pays = p.code_pays
+            JOIN regions r ON p.id_region = r.id_region
+            WHERE i.pib IS NOT NULL
+            GROUP BY r.nom_region, p.nom_pays
+            ORDER BY r.nom_region, moyenne_pib DESC;
+        ";
 
-        $resultats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = mysqli_prepare($conn, $query);
+        if (!$stmt) {
+            error_log("Erreur de préparation SQL : " . mysqli_error($conn));
+            throw new Exception("Erreur de préparation SQL.");
+        }
 
-        // On trie les 5 meilleurs PIB par région
+        if (!mysqli_stmt_execute($stmt)) {
+            error_log("Erreur d'exécution SQL : " . mysqli_error($conn));
+            throw new Exception("Erreur d'exécution SQL.");
+        }
+
+        $result = mysqli_stmt_get_result($stmt);
+        if (!$result) {
+            error_log("Erreur lors de la récupération des résultats : " . mysqli_error($conn));
+            throw new Exception("Erreur lors de la récupération des résultats.");
+        }
+
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        if (empty($data)) {
+            error_log("Aucune donnée trouvée pour la requête.");
+            throw new Exception("Aucune donnée trouvée.");
+        }
+
         $topParRegion = [];
-        foreach ($resultats as $row) {
+        foreach ($data as $row) {
             $region = $row['nom_region'];
             if (!isset($topParRegion[$region])) {
                 $topParRegion[$region] = [];
@@ -432,16 +435,15 @@ function getTop5PIBParRegion($annee) {
             if (count($topParRegion[$region]) < 5) {
                 $topParRegion[$region][] = [
                     'pays' => $row['nom_pays'],
-                    'valeur' => $row['valeur']
+                    'moyenne_pib' => round($row['moyenne_pib'], 2)
                 ];
             }
         }
 
         return $topParRegion;
-
-    } catch (PDOException $e) {
-        // Gestion des erreurs SQL/PDO
-        return ['error' => 'Erreur base de données : ' . $e->getMessage()];
+    } catch (Exception $e) {
+        error_log("Erreur dans getTop5PIBParRegion: " . $e->getMessage());
+        return ['error' => 'Erreur lors de la récupération des données.'];
     }
 }
 ?>
