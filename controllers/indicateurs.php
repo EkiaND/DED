@@ -19,7 +19,16 @@ if (isset($_GET['action'])) {
 
     switch ($action) {
         case 'getMoyennePIBMondial':
-            echo json_encode(getMoyennePIBMondial());
+            try {
+                $result = getMoyennePIBMondial();
+                if (isset($result['error'])) {
+                    error_log("Erreur dans getMoyennePIBMondial: " . $result['error']);
+                }
+                echo json_encode($result);
+            } catch (Exception $e) {
+                error_log("Exception dans getMoyennePIBMondial: " . $e->getMessage());
+                echo json_encode(['error' => 'Une erreur est survenue lors du chargement des données.']);
+            }
             break;
 
         case 'getEsperanceVieMondiale':
@@ -172,46 +181,7 @@ exit;
 // ----------------------------------
 
 function getMoyennePIBMondial() {
-    $pays = getPays();
-    $pibParAnnee = [];
-
-    if ($pays === null || !is_array($pays)) {
-        return ['error' => 'Aucun pays trouvé ou erreur de récupération des pays.'];
-    }
-
-    foreach ($pays as $paysInfo) {
-        $codePays = $paysInfo['code_pays'];
-        $valeurs = getValeursIndicateur('pib', $codePays);
-
-        if ($valeurs === null || empty($valeurs)) {
-            continue;
-        }
-
-        foreach ($valeurs as $data) {
-            $annee = $data['annee'];
-            $pib = $data['valeur'];
-
-            if (is_null($pib) || $pib <= 0) {
-                continue;
-            }
-
-            if (!isset($pibParAnnee[$annee])) {
-                $pibParAnnee[$annee] = ['total' => 0, 'nb_pays' => 0];
-            }
-
-            $pibParAnnee[$annee]['total'] += $pib;
-            $pibParAnnee[$annee]['nb_pays']++;
-        }
-    }
-
-    $moyennePIB = [];
-    foreach ($pibParAnnee as $annee => $data) {
-        if ($data['nb_pays'] > 0) {
-            $moyennePIB[$annee] = $data['total'] / $data['nb_pays'];
-        }
-    }
-
-    return $moyennePIB;
+    return getTop5PIBParRegion();
 }
 
 function getEsperanceVieMondiale() {
