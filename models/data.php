@@ -378,4 +378,70 @@ function getCountryData($codePays) {
         return [];
     }
 }
+
+
+
+/**
+ * Récupère le top 5 des pays ayant le plus haut PIB par région pour une année donnée.
+ *
+ * Cette fonction interroge la base de données pour obtenir les données de PIB (indicateur `NY.GDP.MKTP.CD`)
+ * issues de la table `indicateur`, jointes aux informations des pays (`pays`) et des régions (`region`).
+ * Elle retourne les 5 pays ayant le plus haut PIB pour chaque région, regroupés dans un tableau associatif.
+ *
+ * @param int $annee Année pour laquelle on souhaite récupérer les données du PIB.
+ * @return array Tableau associatif contenant les régions comme clés et pour chaque région,
+ *               un tableau de 5 pays avec leur nom et la valeur de leur PIB.
+ *               En cas d'erreur, retourne un tableau avec la clé 'error' et le message d’erreur.
+ */
+function getTop5PIBParRegion($annee) {
+    require_once('config.php'); // Connexion à la base via PDO
+
+    // ID de l’indicateur du PIB (Produit Intérieur Brut, en dollars constants US)
+    $id_indicateur_pib = 'NY.GDP.MKTP.CD';
+
+    // Requête SQL pour obtenir le PIB des pays par région
+    $sql = "
+        SELECT 
+            r.nom_region,
+            p.nom_pays,
+            i.valeur
+        FROM indicateur i
+        JOIN pays p ON i.code_pays = p.code_pays
+        JOIN region r ON p.id_region = r.id_region
+        WHERE i.id_indicateur = :id_indicateur
+          AND i.annee = :annee
+          AND i.valeur IS NOT NULL
+        ORDER BY r.nom_region, i.valeur DESC
+    ";
+
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':id_indicateur', $id_indicateur_pib, PDO::PARAM_STR);
+        $stmt->bindValue(':annee', $annee, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $resultats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // On trie les 5 meilleurs PIB par région
+        $topParRegion = [];
+        foreach ($resultats as $row) {
+            $region = $row['nom_region'];
+            if (!isset($topParRegion[$region])) {
+                $topParRegion[$region] = [];
+            }
+            if (count($topParRegion[$region]) < 5) {
+                $topParRegion[$region][] = [
+                    'pays' => $row['nom_pays'],
+                    'valeur' => $row['valeur']
+                ];
+            }
+        }
+
+        return $topParRegion;
+
+    } catch (PDOException $e) {
+        // Gestion des erreurs SQL/PDO
+        return ['error' => 'Erreur base de données : ' . $e->getMessage()];
+    }
+}
 ?>

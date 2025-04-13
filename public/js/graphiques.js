@@ -329,3 +329,123 @@ document.addEventListener("DOMContentLoaded", function () {
     
 });
 
+
+// Cette fonction est utilisée pour charger les données du graphique de PIB par région
+// Faudra vérifier quel id de canvas on utilise
+
+function chargerGraphiquePIBParRegion(idCanvas, action, titre) {
+    fetch(`/DED/controllers/indicateurs.php?action=${action}`)
+        .then(response => response.json())
+        .then(data => {
+            const canvas = document.getElementById(idCanvas);
+            if (!canvas) {
+                console.warn(`Canvas avec l'id '${idCanvas}' introuvable — graphique ignoré.`);
+                return;
+            }
+
+            if (data.error) {
+                console.error(`Erreur pour le graphique ${idCanvas}:`, data.error);
+                canvas.parentElement.innerHTML = `<p style="color: red;">Erreur : ${data.error}</p>`;
+                return;
+            }
+
+            const regions = Object.keys(data);
+            const paysParRegion = {};
+            const labels = new Set();
+
+            // Organiser les données
+            regions.forEach(region => {
+                paysParRegion[region] = data[region].slice(0, 5); // Top 5 pays par région
+                data[region].slice(0, 5).forEach(pays => labels.add(pays.nom));
+            });
+
+            const uniqueLabels = Array.from(labels); // Tous les pays uniques (peuvent apparaître plusieurs fois selon les régions)
+
+            const couleurs = ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc948', '#b07aa1', '#ff9da7'];
+            let colorIndex = 0;
+
+            const datasets = regions.map(region => {
+                const dataValues = uniqueLabels.map(pays => {
+                    const entry = paysParRegion[region].find(p => p.nom === pays);
+                    return entry ? entry.valeur : 0;
+                });
+
+                return {
+                    label: region,
+                    data: dataValues,
+                    backgroundColor: couleurs[colorIndex++ % couleurs.length]
+                };
+            });
+
+            const ctx = canvas.getContext("2d");
+
+            // Supprimer l'ancien graphique si existant
+            if (chartInstances[idCanvas]) {
+                chartInstances[idCanvas].destroy();
+            }
+
+            chartInstances[idCanvas] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: uniqueLabels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: titre,
+                            color: 'black',
+                            font: { size: 18 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const pays = context.label;
+                                    const region = context.dataset.label;
+                                    const valeur = context.raw;
+                                    return `${pays} (${region}) : ${valeur.toLocaleString()} $`;
+                                }
+                            }
+                        },
+                        legend: {
+                            labels: {
+                                color: 'black'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            ticks: { color: 'black' },
+                            title: {
+                                display: true,
+                                text: "Pays",
+                                color: 'black'
+                            }
+                        },
+                        y: {
+                            stacked: true,
+                            ticks: { color: 'black' },
+                            title: {
+                                display: true,
+                                text: "PIB ($)",
+                                color: 'black'
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error(`Erreur lors du chargement des données pour ${idCanvas}:`, error);
+            const canvas = document.getElementById(idCanvas);
+            if (canvas) {
+                canvas.parentElement.innerHTML = `<p style="color: red;">Erreur lors du chargement des données.</p>`;
+            }
+        });
+}
+
