@@ -99,8 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(([idh1, idh2]) => {
                 const idhEl1 = document.getElementById("idh-pays1");
                 const idhEl2 = document.getElementById("idh-pays2");
-                idhEl1.textContent = idh1?.idh ? Number(idh1.idh).toFixed(3) : "N/A";
-                idhEl2.textContent = idh2?.idh ? Number(idh2.idh).toFixed(3) : "N/A";
+                idhEl1.textContent = idh1?.idh ? `${Number(idh1.idh).toFixed(2)}%` : "N/A";
+                idhEl2.textContent = idh2?.idh ? `${Number(idh2.idh).toFixed(2)}%` : "N/A";
             });
 
             fetch(`/DED/controllers/indicateurs.php?action=comparerPays&pays1=${pays1}&pays2=${pays2}&indicateur=${indicateur}`)

@@ -47,7 +47,7 @@ if (isset($_GET['action'])) {
             ];
             echo json_encode($result);
             break;
-
+            
         case 'getIdhParPays':
             if (isset($_GET['code'])) {
                 $code = $_GET['code'];
