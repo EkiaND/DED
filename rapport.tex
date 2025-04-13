@@ -559,9 +559,30 @@ code\_pays          & INDICATEUR          & \#code\_pays          & 1 pays → N
 
 \subsubsection*{Méthodologie}
 \begin{itemize}
-    \item \textbf{Analyse préliminaire} : étude de la structure de la base de données et identification des relations clés entre les différentes tables.
-    \item \textbf{Conception du MLD} : modélisation des entités, des attributs et des relations, avec une séparation claire des responsabilités pour faciliter l’implémentation.
-    \item \textbf{Sécurisation} : usage de requêtes paramétrées, validation systématique des entrées utilisateur, et prévention contre les injections SQL.
+    \item \textbf{Optimisation des requêtes SQL} : Construction dynamique des requêtes avec jointures internes optimisées et indexation appropriée. Extraction des métadonnées avec INFORMATION\_SCHEMA pour adapter les requêtes à la structure réelle avec un remplacement des valeurs manquantes par des NA Lors de l'affichage des iindicateurs sur la page les valeurs manquantes sont remplacés par indisponible.
+
+\item \textbf{Compatibilité avec Chart.js} : Transformation des résultats de requêtes en structures JSON uniformes via \texttt{array\_map()} et fonctions de traitement dédiées. Séparation des libellés et valeurs en tableaux distincts  facilitant l'intégration directe. Ensuite un chargement des données dans les listes déroulantes (pour le choix de l'utilisateur).
+
+\item \textbf{Cohérence de l'interface} : API REST standardisée avec points d'entrée homogènes et gestion d'erreurs cohérente. Les réponses JSON incluent systématiquement les métadonnées nécessaires (labels, unités) pour un affichage contextuel.
+
+\item \textbf{Interactivité} : Architecture asynchrone avec endpoints dédiés aux interactions dynamiques, permettant des recharges partielles sans rafraîchissement complet de la page pour afficher l'évolution des indicateurs choisies, la région ainsi que d'autres informations. 
+\end{itemize}
+
+
+\subsubsection*{Conclusion}
+
+Le développement de ce tableau de bord économique m’a permis de renforcer mes compétences en PHP, SQL et JavaScript dans le cadre d’une architecture MVC. J’ai notamment appris à :
+
+\begin{itemize}
+    \item Maîtriser le pattern Singleton pour la gestion des connexions à la base de données.
+    \item Structurer et retourner les données sous forme de tableaux via les fonctions définies dans \texttt{/models/indicateur.php}.
+    \item Concevoir un MCD et un MLD relationnel cohérents et optimisés.
+    \item Sécuriser l’accès aux données grâce à l’utilisation de requêtes préparées et à la validation des entrées.
+    \item Mettre en œuvre des visualisations dynamiques avec Chart.js à partir des données extraites de la base.
+    \item  Récupération des données da
+\end{itemize}
+
+\textbf{Perspectives d’amélioration} : une meilleure gestion des valeurs manquantes pourrait être envisagée. Par exemple, remplacer les données absentes par des valeurs issues de la moyenne ou de la médiane de l’indicateur concerné. Il serait également pertinent d’intégrer à terme des fonctionnalités d’analyse prédictive pour enrichir l’interprétation des données.
 
 \subsection*{Courteney SAINT-HUBERT}
 \subsubsection*{Tâches réalisées}
