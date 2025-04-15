@@ -28,7 +28,7 @@ Ce projet vise à concevoir un tableau de bord interactif dédié à l’analyse
 
 - **Langage** : PHP, HTML, CSS, JavaScript
 - **Frameworks / Bibliothèques** : Chart.js
-- **Base de données** : SQLite
+- **Base de données** : MySQL
 - **Outils de visualisation** : Chart.js
 - **Gestion de versions** : Git
 - **Serveur local** : XAMPP
@@ -42,7 +42,7 @@ Ce projet vise à concevoir un tableau de bord interactif dédié à l’analyse
 ### Prérequis
 
 - **OS** : Windows, macOS, Linux
-- **Dépendances** : PHP, SQLite
+- **Dépendances** : PHP, MySQL
 - **Serveur local** : XAMPP
 
 ### Étapes d'installation
@@ -59,8 +59,7 @@ Ce projet vise à concevoir un tableau de bord interactif dédié à l’analyse
    cd DED
    ```
 3. Configurer la base de données :
-   - Assurez-vous que le fichier `economie_mondiale.db` est présent dans le répertoire `sql/`.
-   - Configurez les paramètres de connexion à la base de données dans `config.inc.php` pour utiliser SQLite.
+   - Configurez les paramètres de connexion à la base de données dans `config.inc.php` pour utiliser MySQL.
 4. Démarrer XAMPP et placer le projet dans le répertoire `htdocs` de XAMPP.
 5. Accéder à l'application via `http://localhost/DED`.
 
@@ -74,47 +73,62 @@ Ce projet vise à concevoir un tableau de bord interactif dédié à l’analyse
 </div>
 
 ```
-DED/
-│-- models/
-│   │-- pays.php                 # Gestion des entités pays
-│   │-- indicateur.php           # Gestion des indicateurs économiques
-│   │-- data.php                 # Requêtes complexes et analyses
-│
-│-- views/
-│   │-- dashboard.php            # Vue principale du tableau de bord
-│   │-- infos_pays.php           # Vue pour les parties A et B
-│   │-- comparaison_pays.php     # Vue pour les parties C et D
-│   │-- partials/                # Fragments de vue réutilisables
-│       │-- header.php           # En-tête de page
-│       │-- footer.php           # Pied de page
-│       │-- selecteurs.php       # Éléments de sélection communs
-│
-│-- controllers/
-│   │-- indicateurs.php          # Contrôleur principal
-│
-│-- public/
-│   │-- css/
-│       │-- style.css            # Styles principaux
-│       │-- responsive.css       # Styles pour l'adaptation mobile
-│   │-- js/
-│       │-- graphiques.js        # Fonctions de génération des graphiques
-│       │-- interactions.js      # Gestion des interactions utilisateur
-│   │-- images/                  # Ressources graphiques
-│
-│-- config.inc.php               # Configuration de l'application (connexion à la base de données)
-│-- index.php                    # Point d'entrée de l'application
-│-- .htaccess                    # Configuration du serveur
-│-- sql/
-│   │-- economie_mondiale.db     # Base de données SQLite
-│
-│-- docs/
-│   │-- rapport.pdf              # Rapport final du projet
-│   │-- MCD.png                  # Diagramme du Modèle Conceptuel de Données
-│   │-- MLD.png                  # Diagramme du Modèle Logique de Données
-|
-│-- README.md                    # Documentation principale
-│-- DEV.md                       # Guide de développement
-│-- LICENCE                      # Licence du projet      
+DED 
+│-- models/  
+│   │-- pays.php                 # Gestion des pays  
+│   │-- indicateur.php           # Gestion des indicateurs économiques  
+│   │-- indices.php              # Gestion des indices économiques  
+│   │-- data.php                 # Requêtes complexes et analyses  
+│  
+│-- views/  
+│   │-- dashboard.php            # Vue principale du tableau de bord  
+│   │-- infos_pays.php           # Vue pour les informations détaillées sur un pays  
+│   │-- comparaison_pays.php     # Vue pour la comparaison entre pays  
+│   │-- partials/                # Fragments de vue réutilisables  
+│       │-- header.php           # En-tête de page  
+│       │-- footer.php           # Pied de page  
+│       │-- selecteurs.php       # Éléments de sélection communs  
+│  
+│-- controllers/  
+│   │-- indicateurs.php          # Contrôleur pour la gestion des indicateurs  
+│   │-- regions.php              # Contrôleur pour la gestion des régions  
+│  
+│-- public/  
+│   │-- css/  
+│       │-- style.css            # Styles principaux  
+│       │-- responsive.css       # Styles pour l'adaptation mobile  
+│   │-- js/  
+│       │-- graphiques.js        # Fonctions de génération des graphiques  
+│       │-- interactions.js      # Gestion des interactions utilisateur  
+│       │-- interaction_info.js  # Affichage des informations supplémentaires lors de l'interaction  
+│       │-- map.js               # Fonctions liées à la gestion de la carte  
+│   │-- img/  
+│       │-- github-mark-white.png # Logo de GitHub  
+│       │-- image_20.png         # Image de présentation  
+│       │-- logo-IUT.png         # Logo de l'IUT  
+│   │-- data/  
+│       │-- ne_110m_admin_0_countries.dbf # Données en DBF des pays  
+│       │-- ne_110m_admin_0_countries.shp # Données en SHP des pays  
+│       │-- ne_110m_admin_0_countries.shx # Index des données SHP  
+│       │-- regions.geojson       # Données des régions au format GeoJSON  
+│       │-- world.geojson        # Données du monde au format GeoJSON  
+│  
+│-- config.inc.php               # Configuration de l'application (connexion à la base de données)  
+│-- index.php                    # Point d'entrée de l'application  
+│-- .htaccess                    # Configuration du serveur  
+│-- sql/  
+│   │-- economie_mondiale.db     # Base de données SQLite  
+│  
+│-- docs/  
+│   │-- howtogit.md              # Guide d'utilisation de Git  
+│   │-- MCD.png                  # Diagramme du Modèle Conceptuel de Données  
+│   │-- MLD.png                  # Diagramme du Modèle Logique de Données  
+│  
+│-- README.md                    # Documentation principale  
+│-- DEV.md                       # Guide de développement  
+│-- IMPORTANT.txt                # Fichier important avec des notes ou instructions  
+│-- rapport.tex                  # Rapport LaTeX du projet  
+│-- Rapport_SAE.pdf              # Rapport final du projet au format PDF  
 ```
 
 <div align="center">
