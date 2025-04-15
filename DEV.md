@@ -41,18 +41,18 @@ Le développement sera divisé en 5 phases principales:
     - [X] **`getRegions()`** : Récupérer la liste des régions disponibles dans la base de données.
     - [X] **`getNombrePaysParRegion($idRegion)`** : Récupérer le nombre de pays dans une région spécifique.
 
-  - [ ] **2.1.2.** Créer le modèle `indicateur.php` pour la gestion des indicateurs
-    - [ ] **`getIndicateurs()`** : Récupérer la liste des indicateurs disponibles (ex. taux de natalité, PIB, espérance de vie).
-    - [ ] **`getValeursIndicateur($idIndicateur, $codePays)`** : Récupérer les valeurs d'un indicateur pour un pays spécifique sur plusieurs années.
-    - [ ] **`getMoyenneIndicateurParRegion($idIndicateur, $idRegion)`** : Récupérer la moyenne d'un indicateur pour une région donnée.
-    - [ ] **`getIndicateursParAnnee($annee)`** : Récupérer les indicateurs disponibles pour une année spécifique.
+  - [X] **2.1.2.** Créer le modèle `indicateur.php` pour la gestion des indicateurs
+    - [X] **`getIndicateurs()`** : Récupérer la liste des indicateurs disponibles (ex. taux de natalité, PIB, espérance de vie).
+    - [X] **`getValeursIndicateur($idIndicateur, $codePays)`** : Récupérer les valeurs d'un indicateur pour un pays spécifique sur plusieurs années.
+    - [X] **`getMoyenneIndicateurParRegion($idIndicateur, $idRegion)`** : Récupérer la moyenne d'un indicateur pour une région donnée.
+    - [X] **`getIndicateursParAnnee($annee)`** : Récupérer les indicateurs disponibles pour une année spécifique.
 
-  - [ ] **2.1.3.** Créer le modèle `indices.php` pour la gestion des indices de développement
-    - [ ] **`getIndicesParPays($codePays)`** : Récupérer les indices de développement pour un pays donné.
-    - [ ] **`getIndiceGenreParPays($codePays, $annee)`** : Récupérer l'indice de développement par genre pour un pays et une année donnés.
-    - [ ] **`getEvolutionIndice($codePays, $indice)`** : Obtenir l'évolution d'un indice spécifique (ex. IDH) pour un pays donné.
-    - [ ] **`getComparaisonIndice($indice, $listePays)`** : Comparer un indice donné pour une liste de pays.
-    - [ ] **`getTopPaysParIndice($indice, $annee, $ordre = 'DESC')`** : Récupérer le classement des pays selon un indice donné pour une année spécifique.
+  - [X] **2.1.3.** Créer le modèle `indices.php` pour la gestion des indices de développement
+    - [X] **`getIndicesParPays($codePays)`** : Récupérer les indices de développement pour un pays donné.
+    - [X] **`getIndiceGenreParPays($codePays, $annee)`** : Récupérer l'indice de développement par genre pour un pays et une année donnés.
+    - [X] **`getEvolutionIndice($codePays, $indice)`** : Obtenir l'évolution d'un indice spécifique (ex. IDH) pour un pays donné.
+    - [X] **`getComparaisonIndice($indice, $listePays)`** : Comparer un indice donné pour une liste de pays.
+    - [X] **`getTopPaysParIndice($indice, $annee, $ordre = 'DESC')`** : Récupérer le classement des pays selon un indice donné pour une année spécifique.
 
   - [X] **2.1.4.** Créer le modèle `data.php` pour les requêtes complexes
     - [X] **`getTop10PaysParIndicateur($idIndicateur, $ordre = 'DESC', $annee = null)`** : Récupérer le top 10 des pays selon un indicateur (ordre croissant ou décroissant), avec la possibilité de filtrer par année. La sortie inclut les pays, leurs valeurs maximales pour l'indicateur et les années correspondantes.
@@ -60,105 +60,120 @@ Le développement sera divisé en 5 phases principales:
     - [X] **`getEvolutionIndicateurParRegion($idIndicateur, $idRegion)`** : Obtenir l'évolution d'un indicateur dans le temps pour une région donnée. La sortie inclut les années et les statistiques suivantes : moyenne, médiane, écart-type, premier quartile (Q1) et troisième quartile (Q3).
     - [X] **`getDistributionIndicateurParRegion($idIndicateur, $annee)`** : Récupérer la distribution d'un indicateur par région pour une année donnée.
 
-- [ ] **2.2.** Tester les requêtes SQL et optimiser les performances
-  - [ ] Vérifier la validité des requêtes SQL pour chaque fonction des modèles.
-  - [ ] Utiliser des index sur les colonnes fréquemment utilisées dans les clauses `WHERE` et `JOIN`.
-  - [ ] Optimiser les requêtes complexes (ex. moyennes, corrélations) pour réduire le temps d'exécution.
+- [X] **2.2.** Tester les requêtes SQL et optimiser les performances
+  - [X] Vérifier la validité des requêtes SQL pour chaque fonction des modèles.
+  - [X] Utiliser des index sur les colonnes fréquemment utilisées dans les clauses `WHERE` et `JOIN`.
+  - [X] Optimiser les requêtes complexes (ex. moyennes, corrélations) pour réduire le temps d'exécution.
 
 ### Phase 3: Frontend - Structure de base (Jours 8-12)
-- [ ] **3.1.** Développer la structure HTML de base
+- [X] **3.1.** Développer la structure HTML de base
   - [X] Créer le template principal dans `index.php`
   - [X] Organiser le tableau de bord en 4 sections selon le cahier des charges
-- [ ] **3.2.** Développer les vues (`views/`)
+- [X] **3.2.** Développer les vues (`views/`)
   - [X] **3.2.1.** Créer `dashboard.php` pour l'interface générale
-  - [ ] **3.2.2.** Créer `infos_pays.php` pour les parties A et B
-  - [ ] **3.2.3.** Créer `comparaison_pays.php` pour les parties C et D
+  - [X] **3.2.2.** Créer `infos_pays.php` pour les parties A et B
+  - [X] **3.2.3.** Créer `comparaison_pays.php` pour les parties C et D
 - [ ] **3.3.** Développer les styles CSS (`public/style.css`)
   - [x] Définir une palette de couleurs cohérente
-  - [ ] Créer des classes pour les éléments de l'interface
   - [ ] Implémenter un design responsive
 
 ### Phase 4: Intégration (Jours 13-20)
-- [ ] **4.1.** Développer les contrôleurs (`controllers/`)
-  - [ ] **4.1.1.** Créer le contrôleur principal `indicateurs.php`
-    - [ ] Fonction pour gérer les sélections d'utilisateur
-    - [ ] Fonction pour préparer les données des graphiques
-- [ ] **4.2.** Intégrer Chart.js et développer les visualisations (`public/graphiques.js`)
-  - [ ] **4.2.1.** Créer les fonctions pour la partie A (Vue d'ensemble pays)
-    - [ ] Afficher les indicateurs clés sous forme de fiches
-  - [ ] **4.2.2.** Créer les fonctions pour la partie B (Évolution d'un indicateur)
-    - [ ] Graphique linéaire d'évolution temporelle
+- [X] **4.1.** Développer les contrôleurs (`controllers/`)
+  - [X] **4.1.1.** Créer le contrôleur principal `indicateurs.php`
+    - [X] Fonction pour gérer les sélections d'utilisateur
+    - [X] Fonction pour préparer les données des graphiques
+- [X] **4.2.** Intégrer Chart.js et développer les visualisations (`public/graphiques.js`)
+  - [X] **4.2.1.** Créer les fonctions pour la partie A (Vue d'ensemble pays)
+    - [X] Afficher les indicateurs clés sous forme de fiches
+  - [X] **4.2.2.** Créer les fonctions pour la partie B (Évolution d'un indicateur)
+    - [X] Graphique linéaire d'évolution temporelle
   - [ ] **4.2.3.** Créer les fonctions pour la partie C (Comparaisons)
-    - [ ] Diagrammes à barres pour les classements
+    - [X] Diagrammes à barres pour les classements
     - [ ] Diagrammes camembert pour les corrélations
   - [ ] **4.2.4.** Créer les fonctions pour la partie D (Analyse par région)
-    - [ ] Graphiques en aires empilées
+    - [X] Graphiques en aires empilées
     - [ ] Graphique linéaire pour le taux de chômage par région
 - [ ] **4.3.** Ajouter l'interactivité aux visualisations
-  - [ ] Implémentation des filtres et sélections
+  - [X] Implémentation des filtres et sélections
   - [x] Ajout d'info-bulles au survol
-  - [ ] Gestion des animations de transition
+  - [X] Gestion des animations de transition
 
 ### Phase 5: Finalisation (Jours 21-25)
-- [ ] **5.1.** Effectuer des tests complets de l'application
-  - [ ] Vérifier l'exactitude des calculs et des visualisations
+- [X] **5.1.** Effectuer des tests complets de l'application
+  - [X] Vérifier l'exactitude des calculs et des visualisations
 - [ ] **5.2.** Optimiser les performances
-  - [ ] Optimiser les requêtes SQL
+  - [X] Optimiser les requêtes SQL
   - [ ] Minimiser le chargement des ressources JavaScript et CSS
 - [ ] **5.3.** Ajouter le storytelling aux visualisations
   - [ ] Rédiger des commentaires explicatifs pour chaque visualisation
   - [ ] Mettre en évidence les tendances importantes
 - [ ] **5.4.** Finaliser la documentation
-  - [ ] Compléter le rapport PDF
-  - [ ] Commenter le code selon les normes PHPDoc
-- [ ] **5.5.** Préparer la livraison finale
-  - [ ] Vérifier que toutes les fonctionnalités sont implémentées
-  - [ ] Créer l'archive compressée au format spécifié
+  - [X] Compléter le rapport PDF
+  - [X] Commenter le code selon les normes PHPDoc
+- [X] **5.5.** Préparer la livraison finale
+  - [X] Vérifier que toutes les fonctionnalités sont implémentées
+  - [X] Créer l'archive compressée au format spécifié
 
 ## Structure finale du projet
 
 ```
-DED/
-│-- models/
-│   │-- pays.php                 # Gestion des entités pays
-│   │-- indicateur.php           # Gestion des indicateurs économiques
-│   │-- data.php                 # Requêtes complexes et analyses
-│
-│-- views/
-│   │-- dashboard.php            # Vue principale du tableau de bord
-│   │-- infos_pays.php           # Vue pour les parties A et B
-│   │-- comparaison_pays.php     # Vue pour les parties C et D
-│   │-- partials/                # Fragments de vue réutilisables
-│       │-- header.php           # En-tête de page
-│       │-- footer.php           # Pied de page
-│       │-- selecteurs.php       # Éléments de sélection communs
-│
-│-- controllers/
-│   │-- indicateurs.php          # Contrôleur principal
-│
-│-- public/
-│   │-- css/
-│       │-- style.css            # Styles principaux
-│       │-- responsive.css       # Styles pour l'adaptation mobile
-│   │-- js/
-│       │-- graphiques.js        # Fonctions de génération des graphiques
-│       │-- interactions.js      # Gestion des interactions utilisateur
-│   │-- images/                  # Ressources graphiques
-│
-│-- config.inc.php               # Configuration de l'application (connexion à la base de données)
-│-- index.php                    # Point d'entrée de l'application
-│-- .htaccess                    # Configuration du serveur
-│-- sql/
-│   │-- economie_mondiale.db     # Base de données SQLite
-│
-│-- docs/
-│   │-- rapport.pdf              # Rapport final du projet
-│   │-- MCD.png                  # Diagramme du Modèle Conceptuel de Données
-│   │-- MLD.png                  # Diagramme du Modèle Logique de Données
-|
-│-- README.md                    # Documentation principale
-│-- DEV.md                       # Guide de développement
-│-- LICENCE                      # Licence du projet    
+DED 
+│-- models/  
+│   │-- pays.php                 # Gestion des pays  
+│   │-- indicateur.php           # Gestion des indicateurs économiques  
+│   │-- indices.php              # Gestion des indices économiques  
+│   │-- data.php                 # Requêtes complexes et analyses  
+│  
+│-- views/  
+│   │-- dashboard.php            # Vue principale du tableau de bord  
+│   │-- infos_pays.php           # Vue pour les informations détaillées sur un pays  
+│   │-- comparaison_pays.php     # Vue pour la comparaison entre pays  
+│   │-- partials/                # Fragments de vue réutilisables  
+│       │-- header.php           # En-tête de page  
+│       │-- footer.php           # Pied de page  
+│       │-- selecteurs.php       # Éléments de sélection communs  
+│  
+│-- controllers/  
+│   │-- indicateurs.php          # Contrôleur pour la gestion des indicateurs  
+│   │-- regions.php              # Contrôleur pour la gestion des régions  
+│  
+│-- public/  
+│   │-- css/  
+│       │-- style.css            # Styles principaux  
+│       │-- responsive.css       # Styles pour l'adaptation mobile  (VIDE)
+│   │-- js/  
+│       │-- graphiques.js        # Fonctions de génération des graphiques  
+│       │-- interactions.js      # Gestion des interactions utilisateur  
+│       │-- interaction_info.js  # Affichage des informations supplémentaires lors de l'interaction  
+│       │-- map.js               # Fonctions liées à la gestion de la carte  
+│   │-- img/  
+│       │-- github-mark-white.png # Logo de GitHub  
+│       │-- image_20.png         # Image de présentation  
+│       │-- logo-IUT.png         # Logo de l'IUT  
+│   │-- data/  
+│       │-- ne_110m_admin_0_countries.dbf # Données en DBF des pays  
+│       │-- ne_110m_admin_0_countries.shp # Données en SHP des pays  
+│       │-- ne_110m_admin_0_countries.shx # Index des données SHP  
+│       │-- regions.geojson       # Données des régions au format GeoJSON  
+│       │-- world.geojson        # Données du monde au format GeoJSON  
+│  
+│-- config.inc.php               # Configuration de l'application (connexion à la base de données)  
+│-- index.php                    # Point d'entrée de l'application  
+│-- .htaccess                    # Configuration du serveur  
+│-- sql/  
+│   │-- economie_mondiale.db     # Base de données SQLite  
+│  
+│-- docs/  
+│   │-- howtogit.md              # Guide d'utilisation de Git, Github et Github Desktop (simplifié)
+│   │-- MCD.png                  # Diagramme du Modèle Conceptuel de Données  
+│   │-- MLD.png                  # Diagramme du Modèle Logique de Données  
+│  
+│-- README.md                    # Documentation principale  
+│-- DEV.md                       # Guide de développement  
+│-- IMPORTANT.txt                # Fichier important avec des notes ou instructions  
+│-- rapport.tex                  # Rapport LaTeX du projet  
+│-- Rapport_SAE.pdf              # Rapport final du projet au format PDF  
+   
 ```
 
 ## Calendrier de développement
